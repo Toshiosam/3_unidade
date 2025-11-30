@@ -17,12 +17,16 @@ public:
     void adicionarLocal(std::string nomeLocal, bool ehDoMeme, std::string textoFixo = "");
     void atualizarTextoLocal(int indice, std::string novoTexto);
     
+    // Novas funções para dicas complexas
     void adicionarFraseNegativa(std::string frase);
+    void adicionarDicaSobreMim(std::string dica); 
     
     std::string getNome() const { return m_nome; }
     std::string getImagemPath() const { return m_imagemPath; }
     const std::vector<Investigacao>& getLocais() const { return m_locais; }
+    
     std::string getFraseNegativaRegional() const;
+    std::vector<std::string> getTodasDicas() const { return m_dicasSobreMim; } // Retorna todas para sortearmos
 
     std::shared_ptr<Country> getOpcaoA() { return m_proxA; }
     std::shared_ptr<Country> getOpcaoB() { return m_proxB; }
@@ -37,4 +41,5 @@ private:
     
     std::vector<Investigacao> m_locais;
     std::vector<std::string> m_frasesNegativas;
+    std::vector<std::string> m_dicasSobreMim; // Novo vetor de dicas culturais
 };
