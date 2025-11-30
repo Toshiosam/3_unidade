@@ -17,7 +17,7 @@ Game::Game() :
 { 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v22.0 UI Fix");
+    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v23.0 Text Clean");
     m_window->setFramerateLimit(60);
 
     bool fonteCarregou = false;
@@ -124,66 +124,66 @@ void Game::wrapText(sf::Text& text, float maxWidth) {
     text.setString(wrappedString);
 }
 
-// --- DADOS DOS MEMES ---
+// --- DADOS DOS MEMES (SEM ACENTOS) ---
 void Game::inicializarMemes() {
     auto fofao = std::make_shared<Meme>("FOFAO DA CARRETA", "Facil", "assets/fofao.jpg"); 
     fofao->adicionarCaracteristica("Dizem que ele anda de trenzinho e faz acrobacias.");
     fofao->adicionarCaracteristica("Foi visto subindo em muros fazendo parkour.");
     fofao->adicionarCaracteristica("Usa uma mascara bizarra e roupas coloridas.");
-    fofao->adicionarCaracteristica("Ele costuma dançar músicas virais na rua.");
+    fofao->adicionarCaracteristica("Ele costuma dancar musicas virais na rua.");
     fofao->adicionarCaracteristica("Acompanha outros personagens como o Chaves.");
-    fofao->adicionarCaracteristica("Sua origem é de Ribeirão Preto.");
-    fofao->adicionarCaracteristica("O lema dele é 'Siga em frente, olhe para o lado'.");
+    fofao->adicionarCaracteristica("Sua origem e de Ribeirao Preto.");
+    fofao->adicionarCaracteristica("O lema dele e 'Siga em frente, olhe para o lado'.");
 
     auto dollynho = std::make_shared<Meme>("DOLLYNHO", "Facil", "assets/dollynho.jpg"); 
     dollynho->adicionarCaracteristica("Tem formato de garrafa e cor verde.");
     dollynho->adicionarCaracteristica("Diz ser o seu amiguinho.");
-    dollynho->adicionarCaracteristica("Adora aparecer em comerciais com animação 3D antiga.");
-    dollynho->adicionarCaracteristica("Canta músicas que ficam na cabeça.");
-    dollynho->adicionarCaracteristica("Pede para você beber muito líquido.");
-    dollynho->adicionarCaracteristica("Tem um pai que também é uma garrafa grande.");
-    dollynho->adicionarCaracteristica("Deseja feliz páscoa e feliz natal.");
+    dollynho->adicionarCaracteristica("Adora aparecer em comerciais com animacao 3D antiga.");
+    dollynho->adicionarCaracteristica("Canta musicas que ficam na cabeca.");
+    dollynho->adicionarCaracteristica("Pede para voce beber muito liquido.");
+    dollynho->adicionarCaracteristica("Tem um pai que tambem e uma garrafa grande.");
+    dollynho->adicionarCaracteristica("Deseja feliz pascoa e feliz natal.");
 
     auto bilu = std::make_shared<Meme>("ET BILU", "Facil", "assets/bilu.jpg"); 
     bilu->adicionarCaracteristica("Vive se escondendo no mato escuro.");
-    bilu->adicionarCaracteristica("Sua frase famosa é 'Busquem conhecimento'.");
+    bilu->adicionarCaracteristica("Sua frase famosa e 'Busquem conhecimento'.");
     bilu->adicionarCaracteristica("Fala com uma voz fina e estranha.");
-    bilu->adicionarCaracteristica("Diz que a Terra é convexa (ou não).");
-    bilu->adicionarCaracteristica("Apareceu em programas de TV fazendo previsões.");
-    bilu->adicionarCaracteristica("Dizem que ele é de Corguinho, no MS.");
-    bilu->adicionarCaracteristica("Pede para que não toquem nele.");
+    bilu->adicionarCaracteristica("Diz que a Terra e convexa (ou nao).");
+    bilu->adicionarCaracteristica("Apareceu em programas de TV fazendo previsoes.");
+    bilu->adicionarCaracteristica("Dizem que ele e de Corguinho, no MS.");
+    bilu->adicionarCaracteristica("Pede para que nao toquem nele.");
 
     auto jeremias = std::make_shared<Meme>("JEREMIAS", "Facil", "assets/jeremias.jpg"); 
-    jeremias->adicionarCaracteristica("Foi detido e deu uma entrevista lendária.");
+    jeremias->adicionarCaracteristica("Foi detido e deu uma entrevista lendaria.");
     jeremias->adicionarCaracteristica("Disse que se pudesse matava mil.");
-    jeremias->adicionarCaracteristica("Afirmou que foi o 'cão' quem botou pra ele beber.");
+    jeremias->adicionarCaracteristica("Afirmou que foi o 'cao' quem botou pra ele beber.");
     jeremias->adicionarCaracteristica("Culpou o delegado de ser agiota.");
     jeremias->adicionarCaracteristica("Disse que queria ir para casa de moto.");
-    jeremias->adicionarCaracteristica("Cantou uma música triste durante o depoimento.");
+    jeremias->adicionarCaracteristica("Cantou uma musica triste durante o depoimento.");
     jeremias->adicionarCaracteristica("Tem o sobrenome 'Muito Louco'.");
 
     auto borabill = std::make_shared<Meme>("BORA BILL", "Medio", "assets/borabill.jpg"); 
     borabill->adicionarCaracteristica("Ficou famoso no futebol de varzea.");
     borabill->adicionarCaracteristica("Um narrador grita o nome dele o tempo todo.");
-    borabill->adicionarCaracteristica("Tem a família toda: mulher do Bill, filho do Bill.");
-    borabill->adicionarCaracteristica("Ele apenas olha para a câmera e ri sem graça.");
-    borabill->adicionarCaracteristica("Virou um bordão nacional: 'Bora Bill!'.");
-    borabill->adicionarCaracteristica("Foi notado até pelo Neymar.");
-    borabill->adicionarCaracteristica("O meme surgiu no Ceará.");
+    borabill->adicionarCaracteristica("Tem a familia toda: mulher do Bill, filho do Bill.");
+    borabill->adicionarCaracteristica("Ele apenas olha para a camera e ri sem graca.");
+    borabill->adicionarCaracteristica("Virou um bordao nacional: 'Bora Bill!'.");
+    borabill->adicionarCaracteristica("Foi notado ate pelo Neymar.");
+    borabill->adicionarCaracteristica("O meme surgiu no Ceara.");
 
     auto freddie = std::make_shared<Meme>("FREDDIE PRATEADO", "Medio", "assets/freddie.jpg"); 
     freddie->adicionarCaracteristica("Usa bigode igual ao cantor do Queen.");
     freddie->adicionarCaracteristica("Tem a pele inteiramente pintada de prata.");
-    freddie->adicionarCaracteristica("Usa apenas uma roupa de banho minúscula.");
-    freddie->adicionarCaracteristica("Ficou famoso no programa Pânico.");
-    freddie->adicionarCaracteristica("Fala de um jeito difícil de entender.");
+    freddie->adicionarCaracteristica("Usa apenas uma roupa de banho minuscula.");
+    freddie->adicionarCaracteristica("Ficou famoso no programa Panico.");
+    freddie->adicionarCaracteristica("Fala de um jeito dificil de entender.");
     freddie->adicionarCaracteristica("Gosta de 'trocar uma ideia' com as pessoas.");
-    freddie->adicionarCaracteristica("É interpretado pelo Eduardo Sterblitch.");
+    freddie->adicionarCaracteristica("E interpretado pelo Eduardo Sterblitch.");
 
     auto nazare = std::make_shared<Meme>("NAZARE CONFUSA", "Medio", "assets/nazare.jpg"); 
-    nazare->adicionarCaracteristica("Olha para o nada com cara de dúvida.");
-    nazare->adicionarCaracteristica("Vê fórmulas matemáticas flutuando no ar.");
-    nazare->adicionarCaracteristica("É uma vilã famosa de novela.");
+    nazare->adicionarCaracteristica("Olha para o nada com cara de duvida.");
+    nazare->adicionarCaracteristica("Ve formulas matematicas flutuando no ar.");
+    nazare->adicionarCaracteristica("E uma vila famosa de novela.");
     nazare->adicionarCaracteristica("Ficou famosa internacionalmente como 'Math Lady'.");
     nazare->adicionarCaracteristica("Tem cabelos loiros e olhar perdido.");
     nazare->adicionarCaracteristica("Roubou a filha da vizinha na novela.");
@@ -191,52 +191,53 @@ void Game::inicializarMemes() {
 
     auto gravida = std::make_shared<Meme>("GRAVIDA DE TAUBATE", "Medio", "assets/gravida.jpg"); 
     gravida->adicionarCaracteristica("Tem uma barriga redonda excessivamente grande.");
-    gravida->adicionarCaracteristica("Alegou estar grávida de quádruplos.");
-    gravida->adicionarCaracteristica("Recebeu doações de fraldas de todo o Brasil.");
+    gravida->adicionarCaracteristica("Alegou estar gravida de quadruplos.");
+    gravida->adicionarCaracteristica("Recebeu doacoes de fraldas de todo o Brasil.");
     gravida->adicionarCaracteristica("Sua barriga era, na verdade, uma bola de praia.");
     gravida->adicionarCaracteristica("Enganou programas de TV famosos.");
-    gravida->adicionarCaracteristica("Seu advogado tentou defendê-la sem sucesso.");
-    gravida->adicionarCaracteristica("Virou fantasia de carnaval clássica.");
+    gravida->adicionarCaracteristica("Seu advogado tentou defende-la sem sucesso.");
+    gravida->adicionarCaracteristica("Virou fantasia de carnaval classica.");
 
     auto gretchen = std::make_shared<Meme>("GRETCHEN", "Dificil", "assets/gretchen.jpg"); 
-    gretchen->adicionarCaracteristica("É conhecida como a rainha dos memes e do rebolado.");
-    gretchen->adicionarCaracteristica("Tem um gif para cada situação da vida.");
+    gretchen->adicionarCaracteristica("E conhecida como a rainha dos memes e do rebolado.");
+    gretchen->adicionarCaracteristica("Tem um gif para cada situacao da vida.");
     gretchen->adicionarCaracteristica("Participou de reality shows e desistiu.");
     gretchen->adicionarCaracteristica("Fez um clipe com a Katy Perry.");
-    gretchen->adicionarCaracteristica("Fala francês e mora na Europa as vezes.");
-    gretchen->adicionarCaracteristica("Já casou muitas vezes.");
-    gretchen->adicionarCaracteristica("É mãe do Thammy.");
+    gretchen->adicionarCaracteristica("Fala frances e mora na Europa as vezes.");
+    gretchen->adicionarCaracteristica("Ja casou muitas vezes.");
+    gretchen->adicionarCaracteristica("E mae do Thammy.");
 
     auto paloma = std::make_shared<Meme>("ADVOGADO PALOMA", "Dificil", "assets/paloma.jpg"); 
-    paloma->adicionarCaracteristica("É um advogado com uma voz muito fina.");
+    paloma->adicionarCaracteristica("E um advogado com uma voz muito fina.");
     paloma->adicionarCaracteristica("Pede desculpas pelo vacilo.");
-    paloma->adicionarCaracteristica("Diz que 'foi refém' da situação.");
+    paloma->adicionarCaracteristica("Diz que 'foi refem' da situacao.");
     paloma->adicionarCaracteristica("Usa um terno que parece grande demais.");
     paloma->adicionarCaracteristica("Sua voz desafina quando ele fica nervoso.");
-    paloma->adicionarCaracteristica("Virou meme em audiências online.");
-    paloma->adicionarCaracteristica("Diz 'Senhor Juiz' com voz esganiçada.");
+    paloma->adicionarCaracteristica("Virou meme em audiencias online.");
+    paloma->adicionarCaracteristica("Diz 'Senhor Juiz' com voz esganicada.");
 
     auto agostinho = std::make_shared<Meme>("AGOSTINHO CARRARA", "Dificil", "assets/agostinho.jpg"); 
-    agostinho->adicionarCaracteristica("É um taxista do Rio de Janeiro.");
+    agostinho->adicionarCaracteristica("E um taxista do Rio de Janeiro.");
     agostinho->adicionarCaracteristica("Usa camisas com estampas muito exageradas.");
     agostinho->adicionarCaracteristica("Gosta de levar vantagem em tudo.");
-    agostinho->adicionarCaracteristica("É casado com a Bebel.");
+    agostinho->adicionarCaracteristica("E casado com a Bebel.");
     agostinho->adicionarCaracteristica("Tem um corte de cabelo antiquado.");
-    agostinho->adicionarCaracteristica("Sua picape de táxi é icônica.");
-    agostinho->adicionarCaracteristica("Virou ícone de moda 'kitsch'.");
+    agostinho->adicionarCaracteristica("Sua picape de taxi e iconica.");
+    agostinho->adicionarCaracteristica("Virou icone de moda 'kitsch'.");
 
     auto menina = std::make_shared<Meme>("MENINA REVOLTADA", "Dificil", "assets/menina.jpg"); 
-    menina->adicionarCaracteristica("Ficou indignada com a organização de um evento.");
-    menina->adicionarCaracteristica("Gritou a frase famosa: 'Que Xou da Xuxa é esse?'.");
-    menina->adicionarCaracteristica("Apareceu em um documentário recente.");
-    menina->adicionarCaracteristica("Estava brava porque não conseguiu entrar.");
-    menina->adicionarCaracteristica("Era apenas uma criança quando virou meme.");
+    menina->adicionarCaracteristica("Ficou indignada com a organizacao de um evento.");
+    menina->adicionarCaracteristica("Gritou a frase famosa: 'Que Xou da Xuxa e esse?'.");
+    menina->adicionarCaracteristica("Apareceu em um documentario recente.");
+    menina->adicionarCaracteristica("Estava brava porque nao conseguiu entrar.");
+    menina->adicionarCaracteristica("Era apenas uma crianca quando virou meme.");
     menina->adicionarCaracteristica("Sua revolta representou o Brasil inteiro.");
-    menina->adicionarCaracteristica("Virou símbolo de indignação.");
+    menina->adicionarCaracteristica("Virou simbolo de indignacao.");
 
     m_todosMemes = { fofao, dollynho, bilu, jeremias, borabill, freddie, nazare, gravida, gretchen, paloma, agostinho, menina };
 }
 
+// --- DICAS E CIDADES REAIS (SEM ACENTOS) ---
 void Game::inicializarPaises() {
     auto br = std::make_shared<Country>("BRASIL", "assets/brasil.jpg"); 
     br->adicionarLocal("Rio de Janeiro", false); br->adicionarLocal("Sao Paulo", false); br->adicionarLocal("Salvador", true, "MEME"); 
@@ -247,13 +248,13 @@ void Game::inicializarPaises() {
     auto jp = std::make_shared<Country>("JAPAO", "assets/japao.jpg"); 
     jp->adicionarLocal("Tokyo", false); jp->adicionarLocal("Kyoto", false); jp->adicionarLocal("Osaka", true, "MEME"); 
     jp->adicionarFraseNegativa("Sumimasen, nao vi ninguem.");
-    jp->adicionarDicaSobreMim("Perguntou onde poderia comprar mangás originais e comer sushi.");
+    jp->adicionarDicaSobreMim("Perguntou onde poderia comprar mangas originais e comer sushi.");
     jp->adicionarDicaSobreMim("Disse que precisava pegar o trem-bala para ver as cerejeiras.");
 
     auto fr = std::make_shared<Country>("FRANCA", "assets/franca.jpg"); 
     fr->adicionarLocal("Paris", false); fr->adicionarLocal("Nice", false); fr->adicionarLocal("Lyon", true, "MEME"); 
     fr->adicionarFraseNegativa("Non, je ne sais pas.");
-    fr->adicionarDicaSobreMim("Comentou que queria tirar uma foto romântica na Torre Eiffel.");
+    fr->adicionarDicaSobreMim("Comentou que queria tirar uma foto romantica na Torre Eiffel.");
     fr->adicionarDicaSobreMim("Disse que iria visitar o Museu do Louvre para ver a Mona Lisa.");
 
     auto us = std::make_shared<Country>("EUA", "assets/eua.jpg"); 
@@ -266,7 +267,7 @@ void Game::inicializarPaises() {
     it->adicionarLocal("Roma", false); it->adicionarLocal("Veneza", false); it->adicionarLocal("Milao", true, "MEME"); 
     it->adicionarFraseNegativa("Mamma mia, no!");
     it->adicionarDicaSobreMim("Perguntou qual o caminho mais rapido para o Coliseu.");
-    it->adicionarDicaSobreMim("Disse que queria andar de gôndola e comer uma pizza autêntica.");
+    it->adicionarDicaSobreMim("Disse que queria andar de gondola e comer uma pizza autentica.");
 
     auto eg = std::make_shared<Country>("EGITO", "assets/egito.jpg"); 
     eg->adicionarLocal("Cairo", false); eg->adicionarLocal("Luxor", false); eg->adicionarLocal("Alexandria", true, "MEME"); 
@@ -289,14 +290,14 @@ void Game::inicializarPaises() {
     auto uk = std::make_shared<Country>("INGLATERRA", "assets/inglaterra.jpg"); 
     uk->adicionarLocal("Londres", false); uk->adicionarLocal("Liverpool", false); uk->adicionarLocal("Manchester", true, "MEME"); 
     uk->adicionarFraseNegativa("Sorry, mate.");
-    uk->adicionarDicaSobreMim("Perguntou se a Rainha estava no palácio.");
+    uk->adicionarDicaSobreMim("Perguntou se a Rainha estava no palacio.");
     uk->adicionarDicaSobreMim("Disse que queria ouvir as badaladas do Big Ben.");
 
     auto mx = std::make_shared<Country>("MEXICO", "assets/mexico.jpg"); 
     mx->adicionarLocal("Cancun", false); mx->adicionarLocal("Acapulco", false); mx->adicionarLocal("Guadalajara", true, "MEME"); 
     mx->adicionarFraseNegativa("No senor.");
     mx->adicionarDicaSobreMim("Perguntou onde poderia comer tacos bem apimentados.");
-    mx->adicionarDicaSobreMim("Disse que queria ouvir mariachis tocando na praça.");
+    mx->adicionarDicaSobreMim("Disse que queria ouvir mariachis tocando na praca.");
 
     auto ca = std::make_shared<Country>("CANADA", "assets/canada.jpg"); 
     ca->adicionarLocal("Toronto", false); ca->adicionarLocal("Vancouver", false); ca->adicionarLocal("Montreal", true, "MEME"); 
@@ -313,8 +314,8 @@ void Game::inicializarPaises() {
     auto es = std::make_shared<Country>("ESPANHA", "assets/espanha.jpg"); 
     es->adicionarLocal("Madrid", false); es->adicionarLocal("Barcelona", false); es->adicionarLocal("Sevilha", true, "MEME"); 
     es->adicionarFraseNegativa("Que va.");
-    es->adicionarDicaSobreMim("Disse que queria assistir a uma dança de flamenco.");
-    es->adicionarDicaSobreMim("Perguntou onde poderia comer uma paella autêntica.");
+    es->adicionarDicaSobreMim("Disse que queria assistir a uma danca de flamenco.");
+    es->adicionarDicaSobreMim("Perguntou onde poderia comer uma paella autentica.");
 
     auto au = std::make_shared<Country>("AUSTRALIA", "assets/australia.jpg"); 
     au->adicionarLocal("Sydney", false); au->adicionarLocal("Melbourne", false); au->adicionarLocal("Brisbane", true, "MEME"); 
@@ -594,8 +595,7 @@ void Game::update() {
     else if(m_estado == EstadoGame::ABDUZINDO) {
         m_textoInfo.setString("CONFIRMACAO VISUAL DO ALVO:");
         
-        // --- CORREÇÃO DA UI: LISTA COMPACTA E MARCADA ---
-        float yList = 100.f; // Começa mais alto
+        float yList = 100.f; 
         for(auto m : m_todosMemes) {
             sf::Text t(m_font); 
             std::string label = m->getNome();
@@ -608,28 +608,24 @@ void Game::update() {
 
             if(captured) {
                 label += " [CATALOGADO]";
-                cor = sf::Color(100, 100, 100); // Cinza
+                cor = sf::Color(100, 100, 100); 
                 t.setStyle(sf::Text::StrikeThrough);
             }
 
             t.setString(label); 
-            t.setCharacterSize(22); // Fonte um pouco menor
+            t.setCharacterSize(22); 
             t.setFillColor(cor);
             t.setPosition({50.f, yList}); 
             t.setOutlineColor(sf::Color::Black); 
             t.setOutlineThickness(2.f); 
             
             m_botoesLocais.push_back(t); 
-            yList += 32.f; // Espaçamento reduzido
+            yList += 32.f; 
         }
     }
 
     for(int i=0; i<(int)m_botoesLocais.size(); ++i) {
-        // Se estiver abduzindo e o item for capturado, não destaca em amarelo (pula)
         if (m_estado == EstadoGame::ABDUZINDO) {
-             // Mantém a cor cinza se já foi capturado, senão usa a lógica de seleção
-             bool isCaptured = false;
-             // Lógica simplificada de cor: só destaca se não estiver capturado
              if(m_botoesLocais[i].getFillColor() != sf::Color(100,100,100)) {
                  if(i == m_opcaoSelecionada) m_botoesLocais[i].setFillColor(sf::Color::Yellow);
                  else m_botoesLocais[i].setFillColor(sf::Color::White);
