@@ -7,7 +7,8 @@
 #include "Meme.h"
 #include "SoundManager.h"
 
-enum class EstadoGame { INVESTIGANDO, VIAJANDO, ABDUZINDO, VITORIA, GAME_OVER, ZEROU, INTRO };
+// Adicionado estado PROMOVIDO
+enum class EstadoGame { INVESTIGANDO, VIAJANDO, ABDUZINDO, VITORIA, GAME_OVER, ZEROU, INTRO, PROMOVIDO };
 
 class Game {
 public:
@@ -49,8 +50,7 @@ private:
     float m_energiaLaser;
     float m_valorPorPista;
     
-    // --- NOVA VARIÁVEL DE CONTROLE ---
-    std::vector<bool> m_pistasVisitadas; // Impede clicar 2x na mesma pista
+    std::vector<bool> m_pistasVisitadas; 
 
     SoundManager m_sound;
     std::vector<sf::Text> m_botoesLocais; 

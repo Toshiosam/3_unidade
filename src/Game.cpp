@@ -5,6 +5,9 @@
 #include <fstream>
 #include <sstream>
 
+const int CUSTO_INVESTIGACAO_FIXO = 1;
+const int CUSTO_VIAGEM_FIXO = 3;
+
 Game::Game() : 
     m_textoInfo(m_font), m_textoFeedback(m_font), m_textoTempo(m_font),
     m_labelLaser(m_font), m_labelTempo(m_font),
@@ -14,7 +17,7 @@ Game::Game() :
 { 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v19.0 Mystery Update");
+    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v22.0 UI Fix");
     m_window->setFramerateLimit(60);
 
     bool fonteCarregou = false;
@@ -59,7 +62,8 @@ Game::Game() :
         "Sua missao: Rastrear e catalogar brasileiros virais.\n\n"
         "PROTOCOLO:\n"
         "- Colete pistas nas CIDADES para descobrir o proximo destino.\n"
-        "- Identifique o Meme antes de tentar a interceptacao.\n\n"
+        "- Identifique o Meme antes de tentar a interceptacao.\n"
+        "- CUIDADO COM O TEMPO: Viagens erradas custam caro!\n\n"
         "[Setas/Mouse] Navegar   [Enter] Confirmar   [M] Mute"
     );
     m_modalTexto.setOrigin({m_modalTexto.getLocalBounds().size.x/2, m_modalTexto.getLocalBounds().size.y/2});
@@ -122,22 +126,117 @@ void Game::wrapText(sf::Text& text, float maxWidth) {
 
 // --- DADOS DOS MEMES ---
 void Game::inicializarMemes() {
-    auto fofao = std::make_shared<Meme>("FOFAO DA CARRETA", "Facil", "assets/fofao.jpg"); fofao->adicionarCaracteristica("Dizem que ele anda de trenzinho e sobe em muros.");
-    auto dollynho = std::make_shared<Meme>("DOLLYNHO", "Facil", "assets/dollynho.jpg"); dollynho->adicionarCaracteristica("Tem formato de garrafa e diz ser nosso amiguinho.");
-    auto bilu = std::make_shared<Meme>("ET BILU", "Facil", "assets/bilu.jpg"); bilu->adicionarCaracteristica("Vive se escondendo no mato e pede para buscarem conhecimento.");
-    auto jeremias = std::make_shared<Meme>("JEREMIAS", "Facil", "assets/jeremias.jpg"); jeremias->adicionarCaracteristica("Foi detido embriagado e disse que se pudesse matava mil.");
-    auto borabill = std::make_shared<Meme>("BORA BILL", "Medio", "assets/borabill.jpg"); borabill->adicionarCaracteristica("Ficou famoso no futebol de varzea gritando 'Bora Bill'.");
-    auto freddie = std::make_shared<Meme>("FREDDIE PRATEADO", "Medio", "assets/freddie.jpg"); freddie->adicionarCaracteristica("Usa bigode, roupa de banho e tem a pele pintada de prata.");
-    auto nazare = std::make_shared<Meme>("NAZARE CONFUSA", "Medio", "assets/nazare.jpg"); nazare->adicionarCaracteristica("Olha para o nada com cara de duvida vendo formulas matematicas.");
-    auto gravida = std::make_shared<Meme>("GRAVIDA DE TAUBATE", "Medio", "assets/gravida.jpg"); gravida->adicionarCaracteristica("Enganou a midia com uma barriga falsa gigante de quadruplos.");
-    auto gretchen = std::make_shared<Meme>("GRETCHEN", "Dificil", "assets/gretchen.jpg"); gretchen->adicionarCaracteristica("A rainha da internet, conhecida por seus gifs e rebolado.");
-    auto paloma = std::make_shared<Meme>("ADVOGADO PALOMA", "Dificil", "assets/paloma.jpg"); paloma->adicionarCaracteristica("Advogado de voz fina que pede desculpas pelo vacilo.");
-    auto agostinho = std::make_shared<Meme>("AGOSTINHO CARRARA", "Dificil", "assets/agostinho.jpg"); agostinho->adicionarCaracteristica("Taxista que adora usar camisas com estampas exageradas.");
-    auto menina = std::make_shared<Meme>("MENINA REVOLTADA", "Dificil", "assets/menina.jpg"); menina->adicionarCaracteristica("Ficou famosa ao gritar 'Que Xou da Xuxa e esse?'");
+    auto fofao = std::make_shared<Meme>("FOFAO DA CARRETA", "Facil", "assets/fofao.jpg"); 
+    fofao->adicionarCaracteristica("Dizem que ele anda de trenzinho e faz acrobacias.");
+    fofao->adicionarCaracteristica("Foi visto subindo em muros fazendo parkour.");
+    fofao->adicionarCaracteristica("Usa uma mascara bizarra e roupas coloridas.");
+    fofao->adicionarCaracteristica("Ele costuma dançar músicas virais na rua.");
+    fofao->adicionarCaracteristica("Acompanha outros personagens como o Chaves.");
+    fofao->adicionarCaracteristica("Sua origem é de Ribeirão Preto.");
+    fofao->adicionarCaracteristica("O lema dele é 'Siga em frente, olhe para o lado'.");
+
+    auto dollynho = std::make_shared<Meme>("DOLLYNHO", "Facil", "assets/dollynho.jpg"); 
+    dollynho->adicionarCaracteristica("Tem formato de garrafa e cor verde.");
+    dollynho->adicionarCaracteristica("Diz ser o seu amiguinho.");
+    dollynho->adicionarCaracteristica("Adora aparecer em comerciais com animação 3D antiga.");
+    dollynho->adicionarCaracteristica("Canta músicas que ficam na cabeça.");
+    dollynho->adicionarCaracteristica("Pede para você beber muito líquido.");
+    dollynho->adicionarCaracteristica("Tem um pai que também é uma garrafa grande.");
+    dollynho->adicionarCaracteristica("Deseja feliz páscoa e feliz natal.");
+
+    auto bilu = std::make_shared<Meme>("ET BILU", "Facil", "assets/bilu.jpg"); 
+    bilu->adicionarCaracteristica("Vive se escondendo no mato escuro.");
+    bilu->adicionarCaracteristica("Sua frase famosa é 'Busquem conhecimento'.");
+    bilu->adicionarCaracteristica("Fala com uma voz fina e estranha.");
+    bilu->adicionarCaracteristica("Diz que a Terra é convexa (ou não).");
+    bilu->adicionarCaracteristica("Apareceu em programas de TV fazendo previsões.");
+    bilu->adicionarCaracteristica("Dizem que ele é de Corguinho, no MS.");
+    bilu->adicionarCaracteristica("Pede para que não toquem nele.");
+
+    auto jeremias = std::make_shared<Meme>("JEREMIAS", "Facil", "assets/jeremias.jpg"); 
+    jeremias->adicionarCaracteristica("Foi detido e deu uma entrevista lendária.");
+    jeremias->adicionarCaracteristica("Disse que se pudesse matava mil.");
+    jeremias->adicionarCaracteristica("Afirmou que foi o 'cão' quem botou pra ele beber.");
+    jeremias->adicionarCaracteristica("Culpou o delegado de ser agiota.");
+    jeremias->adicionarCaracteristica("Disse que queria ir para casa de moto.");
+    jeremias->adicionarCaracteristica("Cantou uma música triste durante o depoimento.");
+    jeremias->adicionarCaracteristica("Tem o sobrenome 'Muito Louco'.");
+
+    auto borabill = std::make_shared<Meme>("BORA BILL", "Medio", "assets/borabill.jpg"); 
+    borabill->adicionarCaracteristica("Ficou famoso no futebol de varzea.");
+    borabill->adicionarCaracteristica("Um narrador grita o nome dele o tempo todo.");
+    borabill->adicionarCaracteristica("Tem a família toda: mulher do Bill, filho do Bill.");
+    borabill->adicionarCaracteristica("Ele apenas olha para a câmera e ri sem graça.");
+    borabill->adicionarCaracteristica("Virou um bordão nacional: 'Bora Bill!'.");
+    borabill->adicionarCaracteristica("Foi notado até pelo Neymar.");
+    borabill->adicionarCaracteristica("O meme surgiu no Ceará.");
+
+    auto freddie = std::make_shared<Meme>("FREDDIE PRATEADO", "Medio", "assets/freddie.jpg"); 
+    freddie->adicionarCaracteristica("Usa bigode igual ao cantor do Queen.");
+    freddie->adicionarCaracteristica("Tem a pele inteiramente pintada de prata.");
+    freddie->adicionarCaracteristica("Usa apenas uma roupa de banho minúscula.");
+    freddie->adicionarCaracteristica("Ficou famoso no programa Pânico.");
+    freddie->adicionarCaracteristica("Fala de um jeito difícil de entender.");
+    freddie->adicionarCaracteristica("Gosta de 'trocar uma ideia' com as pessoas.");
+    freddie->adicionarCaracteristica("É interpretado pelo Eduardo Sterblitch.");
+
+    auto nazare = std::make_shared<Meme>("NAZARE CONFUSA", "Medio", "assets/nazare.jpg"); 
+    nazare->adicionarCaracteristica("Olha para o nada com cara de dúvida.");
+    nazare->adicionarCaracteristica("Vê fórmulas matemáticas flutuando no ar.");
+    nazare->adicionarCaracteristica("É uma vilã famosa de novela.");
+    nazare->adicionarCaracteristica("Ficou famosa internacionalmente como 'Math Lady'.");
+    nazare->adicionarCaracteristica("Tem cabelos loiros e olhar perdido.");
+    nazare->adicionarCaracteristica("Roubou a filha da vizinha na novela.");
+    nazare->adicionarCaracteristica("Derrubou pessoas da escada.");
+
+    auto gravida = std::make_shared<Meme>("GRAVIDA DE TAUBATE", "Medio", "assets/gravida.jpg"); 
+    gravida->adicionarCaracteristica("Tem uma barriga redonda excessivamente grande.");
+    gravida->adicionarCaracteristica("Alegou estar grávida de quádruplos.");
+    gravida->adicionarCaracteristica("Recebeu doações de fraldas de todo o Brasil.");
+    gravida->adicionarCaracteristica("Sua barriga era, na verdade, uma bola de praia.");
+    gravida->adicionarCaracteristica("Enganou programas de TV famosos.");
+    gravida->adicionarCaracteristica("Seu advogado tentou defendê-la sem sucesso.");
+    gravida->adicionarCaracteristica("Virou fantasia de carnaval clássica.");
+
+    auto gretchen = std::make_shared<Meme>("GRETCHEN", "Dificil", "assets/gretchen.jpg"); 
+    gretchen->adicionarCaracteristica("É conhecida como a rainha dos memes e do rebolado.");
+    gretchen->adicionarCaracteristica("Tem um gif para cada situação da vida.");
+    gretchen->adicionarCaracteristica("Participou de reality shows e desistiu.");
+    gretchen->adicionarCaracteristica("Fez um clipe com a Katy Perry.");
+    gretchen->adicionarCaracteristica("Fala francês e mora na Europa as vezes.");
+    gretchen->adicionarCaracteristica("Já casou muitas vezes.");
+    gretchen->adicionarCaracteristica("É mãe do Thammy.");
+
+    auto paloma = std::make_shared<Meme>("ADVOGADO PALOMA", "Dificil", "assets/paloma.jpg"); 
+    paloma->adicionarCaracteristica("É um advogado com uma voz muito fina.");
+    paloma->adicionarCaracteristica("Pede desculpas pelo vacilo.");
+    paloma->adicionarCaracteristica("Diz que 'foi refém' da situação.");
+    paloma->adicionarCaracteristica("Usa um terno que parece grande demais.");
+    paloma->adicionarCaracteristica("Sua voz desafina quando ele fica nervoso.");
+    paloma->adicionarCaracteristica("Virou meme em audiências online.");
+    paloma->adicionarCaracteristica("Diz 'Senhor Juiz' com voz esganiçada.");
+
+    auto agostinho = std::make_shared<Meme>("AGOSTINHO CARRARA", "Dificil", "assets/agostinho.jpg"); 
+    agostinho->adicionarCaracteristica("É um taxista do Rio de Janeiro.");
+    agostinho->adicionarCaracteristica("Usa camisas com estampas muito exageradas.");
+    agostinho->adicionarCaracteristica("Gosta de levar vantagem em tudo.");
+    agostinho->adicionarCaracteristica("É casado com a Bebel.");
+    agostinho->adicionarCaracteristica("Tem um corte de cabelo antiquado.");
+    agostinho->adicionarCaracteristica("Sua picape de táxi é icônica.");
+    agostinho->adicionarCaracteristica("Virou ícone de moda 'kitsch'.");
+
+    auto menina = std::make_shared<Meme>("MENINA REVOLTADA", "Dificil", "assets/menina.jpg"); 
+    menina->adicionarCaracteristica("Ficou indignada com a organização de um evento.");
+    menina->adicionarCaracteristica("Gritou a frase famosa: 'Que Xou da Xuxa é esse?'.");
+    menina->adicionarCaracteristica("Apareceu em um documentário recente.");
+    menina->adicionarCaracteristica("Estava brava porque não conseguiu entrar.");
+    menina->adicionarCaracteristica("Era apenas uma criança quando virou meme.");
+    menina->adicionarCaracteristica("Sua revolta representou o Brasil inteiro.");
+    menina->adicionarCaracteristica("Virou símbolo de indignação.");
+
     m_todosMemes = { fofao, dollynho, bilu, jeremias, borabill, freddie, nazare, gravida, gretchen, paloma, agostinho, menina };
 }
 
-// --- DICAS E CIDADES REAIS ---
 void Game::inicializarPaises() {
     auto br = std::make_shared<Country>("BRASIL", "assets/brasil.jpg"); 
     br->adicionarLocal("Rio de Janeiro", false); br->adicionarLocal("Sao Paulo", false); br->adicionarLocal("Salvador", true, "MEME"); 
@@ -249,24 +348,49 @@ std::shared_ptr<Meme> Game::sortearMemeDisponivel(std::string nivel) {
 
 void Game::iniciarNovaMissao() {
     if (m_nomesCapturados.size() >= m_todosMemes.size()) { m_estado = EstadoGame::ZEROU; m_sound.playSucesso(); return; }
-    m_estado = EstadoGame::INVESTIGANDO; m_energiaLaser = 0.0f; m_horasRestantes = 120; m_opcaoSelecionada = 0;
-    m_textoFeedback.setString(""); 
-
+    
     int facilRestante = contarMemesRestantes("Facil");
     int medioRestante = contarMemesRestantes("Medio");
-    std::string nivel = "Facil"; int rota = 3;
+    std::string nivelTexto = "Facil"; 
+    int rota = 3;
+    int novoNivelNumerico = 1;
 
-    if (facilRestante > 0) { nivel = "Facil"; rota = 3; m_nivelAtual = 1; } 
-    else if (medioRestante > 0) { nivel = "Medio"; rota = 5; m_nivelAtual = 2; } 
-    else { nivel = "Dificil"; rota = 7; m_nivelAtual = 3; }
+    if (facilRestante > 0) { 
+        nivelTexto = "Facil"; 
+        rota = 3; 
+        novoNivelNumerico = 1; 
+        m_horasRestantes = 24; 
+    } 
+    else if (medioRestante > 0) { 
+        nivelTexto = "Medio"; 
+        rota = 5; 
+        novoNivelNumerico = 2; 
+        m_horasRestantes = 33; 
+    } 
+    else { 
+        nivelTexto = "Dificil"; 
+        rota = 7; 
+        novoNivelNumerico = 3; 
+        m_horasRestantes = 39; 
+    }
 
+    if (novoNivelNumerico > m_nivelAtual && m_nomesCapturados.size() > 0) {
+        m_estado = EstadoGame::PROMOVIDO;
+        m_nivelAtual = novoNivelNumerico; 
+        m_sound.playSucesso(); 
+        return; 
+    }
+    
+    m_estado = EstadoGame::INVESTIGANDO; 
+    m_energiaLaser = 0.0f; 
+    m_opcaoSelecionada = 0;
+    m_textoFeedback.setString(""); 
     m_valorPorPista = 100.0f / (float)rota;
 
-    m_alvoAtual = sortearMemeDisponivel(nivel);
+    m_alvoAtual = sortearMemeDisponivel(nivelTexto);
     if (!m_alvoAtual) { m_estado = EstadoGame::ZEROU; return; }
 
-    // [ALTERAÇÃO 1] Mensagem misteriosa que não revela o nome do alvo
-    m_textoFeedback.setString("ALERTA: Novo meme brasileiro precisa ser estudado. Junte informacoes nas cidades para identifica-lo. NIVEL: " + nivel);
+    m_textoFeedback.setString("ALERTA: Novo meme brasileiro precisa ser estudado. Junte informacoes nas cidades para identifica-lo. NIVEL: " + nivelTexto);
     wrapText(m_textoFeedback, 1200.f); 
 
     gerarMissaoLinear(rota);
@@ -297,7 +421,7 @@ void Game::gerarMissaoLinear(int tamanho) {
 
         for(int k=0; k<(int)locsOri.size(); k++) {
             if(locsOri[k].revelaMeme) {
-                origem->atualizarTextoLocal(k, m_alvoAtual->getCaracteristicaAleatoria()); 
+                origem->atualizarTextoLocal(k, m_alvoAtual->getCaracteristica(i)); 
             } else {
                 if (contadorDicasDestino < (int)dicasDestino.size()) {
                     origem->atualizarTextoLocal(k, dicasDestino[contadorDicasDestino]);
@@ -310,15 +434,12 @@ void Game::gerarMissaoLinear(int tamanho) {
     }
     rota[tamanho]->definirDestinos(nullptr, nullptr, false); m_paisAtual = rota[0];
     
-    // [ALTERAÇÃO 2] Configurar o País Final para ter dicas de urgência/proximidade
     auto paisFinal = rota[tamanho];
     auto locsFinal = paisFinal->getLocais();
     for(int k=0; k<(int)locsFinal.size(); k++) {
         if(locsFinal[k].revelaMeme) {
-            // Se o local revela o meme, mantemos a dica da característica para o jogador confirmar
-            paisFinal->atualizarTextoLocal(k, "CONFIRMADO: " + m_alvoAtual->getCaracteristicaAleatoria());
+            paisFinal->atualizarTextoLocal(k, "CONFIRMADO: " + m_alvoAtual->getCaracteristica(tamanho));
         } else {
-            // Se for uma cidade vizinha errada no país final, indica proximidade
             paisFinal->atualizarTextoLocal(k, "MORADOR: O suspeito esta muito proximo! Foi visto nos arredores.");
         }
     }
@@ -334,6 +455,11 @@ void Game::processEvents() {
             if (kp->code == sf::Keyboard::Key::Escape) m_window->close();
             if (kp->code == sf::Keyboard::Key::M) m_sound.toggleMute();
 
+            if (m_estado == EstadoGame::PROMOVIDO) {
+                if (kp->code == sf::Keyboard::Key::Enter) { iniciarNovaMissao(); }
+                return;
+            }
+
             if (m_estado == EstadoGame::INTRO) {
                 if (kp->code == sf::Keyboard::Key::Enter || kp->code == sf::Keyboard::Key::Space) { m_sound.playConfirmar(); iniciarNovaMissao(); } return;
             }
@@ -346,11 +472,13 @@ void Game::processEvents() {
             }
         }
 
-        if (m_estado == EstadoGame::INTRO) continue;
+        if (m_estado == EstadoGame::INTRO || m_estado == EstadoGame::PROMOVIDO) continue;
 
         if (const auto* mp = event->getIf<sf::Event::MouseButtonPressed>()) {
             if (mp->button == sf::Mouse::Button::Left) {
                 sf::Vector2f pos = m_window->mapPixelToCoords(sf::Mouse::getPosition(*m_window));
+                
+                if (m_estado == EstadoGame::PROMOVIDO) { iniciarNovaMissao(); return; }
                 if (m_estado == EstadoGame::VITORIA || m_estado == EstadoGame::GAME_OVER) { iniciarNovaMissao(); return; }
                 if (m_estado == EstadoGame::ZEROU) return;
 
@@ -371,7 +499,7 @@ void Game::processEvents() {
                                     } else { m_estado = EstadoGame::GAME_OVER; m_sound.playErro(); }
                                 } else { m_estado = EstadoGame::VIAJANDO; m_sound.playConfirmar(); }
                             } else {
-                                m_horasRestantes -= CUSTO_INVESTIGAR;
+                                m_horasRestantes -= CUSTO_INVESTIGACAO_FIXO;
                                 m_textoFeedback.setString(m_paisAtual->getLocais()[i].pistaTexto);
                                 wrapText(m_textoFeedback, 1200.f); 
                                 m_sound.playConfirmar();
@@ -386,7 +514,7 @@ void Game::processEvents() {
                             }
                         }
                         else if(m_estado == EstadoGame::VIAJANDO) {
-                            m_horasRestantes -= CUSTO_VIAGEM;
+                            m_horasRestantes -= CUSTO_VIAGEM_FIXO;
                             auto prox = (i==0) ? m_paisAtual->getOpcaoA() : m_paisAtual->getOpcaoB();
                             if(prox) {
                                 m_paisAtual = prox; 
@@ -428,6 +556,11 @@ void Game::processEvents() {
 void Game::update() {
     if(m_estado == EstadoGame::INTRO) return;
 
+    if(m_estado == EstadoGame::PROMOVIDO) {
+        m_textoInfo.setString("PARABENS AGENTE!");
+        return;
+    }
+
     m_barEnergia.setSize({300.f * (m_energiaLaser/100.f), 30.f});
     if(m_estado == EstadoGame::ZEROU) { m_textoInfo.setString("VOCE ZEROU O JOGO!"); m_botoesLocais.clear(); return; }
     if(m_estado == EstadoGame::VITORIA) { m_textoInfo.setString("SUJEITO CONTIDO COM SUCESSO!"); m_botoesLocais.clear(); return; }
@@ -436,13 +569,8 @@ void Game::update() {
         m_estado = EstadoGame::GAME_OVER; m_textoInfo.setString("GAME OVER"); m_botoesLocais.clear(); return; 
     }
 
-    int horas = m_horasRestantes / 60;
-    int minutos = m_horasRestantes % 60;
-    std::string horasStr = std::to_string(horas);
-    std::string minutosStr = std::to_string(minutos);
-    if (minutos < 10) minutosStr = "0" + minutosStr;
+    m_textoTempo.setString("T-" + std::to_string(m_horasRestantes));
     
-    m_textoTempo.setString("T-" + horasStr + ":" + minutosStr);
     m_botoesLocais.clear(); float y = 120.f;
 
     if(m_estado == EstadoGame::INVESTIGANDO) {
@@ -465,13 +593,51 @@ void Game::update() {
     }
     else if(m_estado == EstadoGame::ABDUZINDO) {
         m_textoInfo.setString("CONFIRMACAO VISUAL DO ALVO:");
+        
+        // --- CORREÇÃO DA UI: LISTA COMPACTA E MARCADA ---
+        float yList = 100.f; // Começa mais alto
         for(auto m : m_todosMemes) {
-            sf::Text t(m_font); t.setString(m->getNome()); t.setCharacterSize(24); t.setPosition({50.f, y}); t.setOutlineColor(sf::Color::Black); t.setOutlineThickness(2.f); m_botoesLocais.push_back(t); y+=40.f;
+            sf::Text t(m_font); 
+            std::string label = m->getNome();
+            sf::Color cor = sf::Color::White;
+            bool captured = false;
+            
+            for(const auto& cap : m_nomesCapturados) {
+                if(cap == m->getNome()) captured = true;
+            }
+
+            if(captured) {
+                label += " [CATALOGADO]";
+                cor = sf::Color(100, 100, 100); // Cinza
+                t.setStyle(sf::Text::StrikeThrough);
+            }
+
+            t.setString(label); 
+            t.setCharacterSize(22); // Fonte um pouco menor
+            t.setFillColor(cor);
+            t.setPosition({50.f, yList}); 
+            t.setOutlineColor(sf::Color::Black); 
+            t.setOutlineThickness(2.f); 
+            
+            m_botoesLocais.push_back(t); 
+            yList += 32.f; // Espaçamento reduzido
         }
     }
 
     for(int i=0; i<(int)m_botoesLocais.size(); ++i) {
-        if(i == m_opcaoSelecionada) m_botoesLocais[i].setFillColor(sf::Color::Yellow); else m_botoesLocais[i].setFillColor(sf::Color::White);
+        // Se estiver abduzindo e o item for capturado, não destaca em amarelo (pula)
+        if (m_estado == EstadoGame::ABDUZINDO) {
+             // Mantém a cor cinza se já foi capturado, senão usa a lógica de seleção
+             bool isCaptured = false;
+             // Lógica simplificada de cor: só destaca se não estiver capturado
+             if(m_botoesLocais[i].getFillColor() != sf::Color(100,100,100)) {
+                 if(i == m_opcaoSelecionada) m_botoesLocais[i].setFillColor(sf::Color::Yellow);
+                 else m_botoesLocais[i].setFillColor(sf::Color::White);
+             }
+        } else {
+            if(i == m_opcaoSelecionada) m_botoesLocais[i].setFillColor(sf::Color::Yellow); 
+            else m_botoesLocais[i].setFillColor(sf::Color::White);
+        }
     }
 }
 
@@ -493,6 +659,41 @@ void Game::render() {
                 float s = 150.f/b.size.y; m_sprMeme.setScale({s,s});
                 m_window->draw(m_sprMeme);
             }
+        }
+
+        if(m_estado == EstadoGame::PROMOVIDO) {
+            m_window->draw(m_modalFundo); 
+            
+            sf::Text promo(m_font); 
+            promo.setString("AGENTE PROMOVIDO!"); 
+            promo.setCharacterSize(70); 
+            promo.setFillColor(sf::Color::Yellow);
+            promo.setOutlineColor(sf::Color::Red);
+            promo.setOutlineThickness(4.f);
+            promo.setStyle(sf::Text::Bold);
+            promo.setRotation(sf::degrees(-10.f));
+            promo.setOrigin({promo.getLocalBounds().size.x/2, promo.getLocalBounds().size.y/2});
+            promo.setPosition({640.f, 300.f});
+            m_window->draw(promo);
+
+            sf::Text sub(m_font);
+            sub.setString("NOVO NIVEL DE ACESSO: " + std::to_string(m_nivelAtual));
+            sub.setCharacterSize(24);
+            sub.setFillColor(sf::Color::White);
+            sub.setOrigin({sub.getLocalBounds().size.x/2, sub.getLocalBounds().size.y/2});
+            sub.setPosition({640.f, 450.f});
+            m_window->draw(sub);
+
+            sf::Text cont(m_font);
+            cont.setString("[PRESSIONE ENTER]");
+            cont.setCharacterSize(20);
+            cont.setFillColor(sf::Color::Green);
+            cont.setOrigin({cont.getLocalBounds().size.x/2, cont.getLocalBounds().size.y/2});
+            cont.setPosition({640.f, 550.f});
+            m_window->draw(cont);
+
+            m_window->display();
+            return;
         }
         
         if(m_estado == EstadoGame::ABDUZINDO || m_estado == EstadoGame::VITORIA) {
