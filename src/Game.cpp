@@ -17,7 +17,7 @@ Game::Game() :
 { 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v23.0 Text Clean");
+    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v25.0 Chroma Key");
     m_window->setFramerateLimit(60);
 
     bool fonteCarregou = false;
@@ -49,27 +49,35 @@ Game::Game() :
 
     // UI INTRO
     m_modalFundo.setSize({1280.f, 720.f}); m_modalFundo.setFillColor(sf::Color(0, 0, 0, 240));
-    m_modalCaixa.setSize({800.f, 450.f}); m_modalCaixa.setOrigin({400.f, 225.f}); m_modalCaixa.setPosition({640.f, 360.f});
-    m_modalCaixa.setFillColor(sf::Color(20, 20, 50)); m_modalCaixa.setOutlineColor(sf::Color::White); m_modalCaixa.setOutlineThickness(3.f);
+    m_modalCaixa.setSize({950.f, 550.f}); 
+    m_modalCaixa.setOrigin({475.f, 275.f}); 
+    m_modalCaixa.setPosition({640.f, 360.f});
+    m_modalCaixa.setFillColor(sf::Color(10, 10, 40)); 
+    m_modalCaixa.setOutlineColor(sf::Color::White); m_modalCaixa.setOutlineThickness(3.f);
 
-    configTexto(m_modalTitulo, 36, sf::Color::Yellow, 640.f, 180.f);
-    m_modalTitulo.setString("CONFIDENCIAL - AGENTE M.I.B.");
+    configTexto(m_modalTitulo, 32, sf::Color::Yellow, 640.f, 140.f);
+    m_modalTitulo.setString("NASA: O BRASILEIRO PRECISA SER ESTUDADO");
     m_modalTitulo.setOrigin({m_modalTitulo.getLocalBounds().size.x/2, m_modalTitulo.getLocalBounds().size.y/2});
 
-    configTexto(m_modalTexto, 20, sf::Color::White, 640.f, 360.f);
+    configTexto(m_modalTexto, 19, sf::Color::White, 640.f, 350.f);
     m_modalTexto.setString(
-        "Bem-vindo ao Nucleo de Analise de Sujeitos Anormais.\n\n"
-        "Sua missao: Rastrear e catalogar brasileiros virais.\n\n"
-        "PROTOCOLO:\n"
-        "- Colete pistas nas CIDADES para descobrir o proximo destino.\n"
-        "- Identifique o Meme antes de tentar a interceptacao.\n"
-        "- CUIDADO COM O TEMPO: Viagens erradas custam caro!\n\n"
-        "[Setas/Mouse] Navegar   [Enter] Confirmar   [M] Mute"
+        "AGENTE, BEM-VINDO A DIVISAO DE CASOS ESPECIAIS.\n\n"
+        "Detectamos anomalias virais no Brasil que desafiam a logica.\n"
+        "Sua missao e rastrear, estudar e catalogar esses sujeitos (MEMES).\n\n"
+        "COMO JOGAR:\n"
+        "1. INVESTIGUE CIDADES para coletar pistas e encher a Barra de Estudo.\n"
+        "2. ANALISE AS DICAS para descobrir para qual PAIS o sujeito viajou.\n"
+        "3. CUIDADO COM O TEMPO: Viagens erradas gastam muitas horas!\n\n"
+        "PLANO DE CARREIRA:\n"
+        "Voce comeca como ESTAGIARIO. Capture os alvos de cada nivel\n"
+        "para ser promovido ate alcancar a patente maxima: AGENTE M.I.B.\n\n"
+        "[Setas/Mouse] Selecionar   [Enter] Confirmar   [M] Mute"
     );
+    m_modalTexto.setLineSpacing(1.2f); 
     m_modalTexto.setOrigin({m_modalTexto.getLocalBounds().size.x/2, m_modalTexto.getLocalBounds().size.y/2});
 
-    configTexto(m_modalBotao, 24, sf::Color::Green, 640.f, 550.f);
-    m_modalBotao.setString("[PRESSIONE ENTER]");
+    configTexto(m_modalBotao, 24, sf::Color::Green, 640.f, 580.f);
+    m_modalBotao.setString("[PRESSIONE ENTER PARA INICIAR]");
     m_modalBotao.setOrigin({m_modalBotao.getLocalBounds().size.x/2, m_modalBotao.getLocalBounds().size.y/2});
 
     inicializarPaises();
@@ -90,11 +98,25 @@ void Game::run() {
     }
 }
 
+// [NOVA LÓGICA DE CARREGAMENTO COM TRANSPARÊNCIA]
 bool tentarCarregarImagem(sf::Texture& texture, std::string caminhoOriginal) {
     std::vector<std::string> tentativas = { caminhoOriginal, "src/" + caminhoOriginal, "../" + caminhoOriginal, "../src/" + caminhoOriginal };
     for (const auto& caminho : tentativas) {
         std::ifstream f(caminho.c_str());
-        if (f.good()) { if (texture.loadFromFile(caminho)) return true; }
+        if (f.good()) { 
+            // 1. Carrega primeiro como Imagem (na CPU)
+            sf::Image imagemTemp;
+            if (imagemTemp.loadFromFile(caminho)) {
+                // 2. Cria a máscara: Diz que a cor BRANCA (White) deve virar transparente (Alpha 0)
+                // Se seus memes tiverem fundo de outra cor (ex: rosa choque), mude sf::Color::White
+                imagemTemp.createMaskFromColor(sf::Color::White);
+                
+                // 3. Carrega a textura final a partir da imagem processada
+                if (texture.loadFromImage(imagemTemp)) {
+                    return true;
+                }
+            }
+        }
     }
     return false;
 }
@@ -124,7 +146,7 @@ void Game::wrapText(sf::Text& text, float maxWidth) {
     text.setString(wrappedString);
 }
 
-// --- DADOS DOS MEMES (SEM ACENTOS) ---
+// --- DADOS DOS MEMES ---
 void Game::inicializarMemes() {
     auto fofao = std::make_shared<Meme>("FOFAO DA CARRETA", "Facil", "assets/fofao.jpg"); 
     fofao->adicionarCaracteristica("Dizem que ele anda de trenzinho e faz acrobacias.");
@@ -237,7 +259,6 @@ void Game::inicializarMemes() {
     m_todosMemes = { fofao, dollynho, bilu, jeremias, borabill, freddie, nazare, gravida, gretchen, paloma, agostinho, menina };
 }
 
-// --- DICAS E CIDADES REAIS (SEM ACENTOS) ---
 void Game::inicializarPaises() {
     auto br = std::make_shared<Country>("BRASIL", "assets/brasil.jpg"); 
     br->adicionarLocal("Rio de Janeiro", false); br->adicionarLocal("Sao Paulo", false); br->adicionarLocal("Salvador", true, "MEME"); 
