@@ -9,11 +9,12 @@ Game::Game() :
     m_textoInfo(m_font), m_textoFeedback(m_font), m_textoTempo(m_font),
     m_labelLaser(m_font), m_labelTempo(m_font),
     m_modalTitulo(m_font), m_modalTexto(m_font), m_modalBotao(m_font),
-    m_sprFundo(m_texFundo), m_sprMeme(m_texMeme), m_opcaoSelecionada(0) 
+    m_sprFundo(m_texFundo), m_sprMeme(m_texMeme), m_opcaoSelecionada(0),
+    m_valorPorPista(34.0f) 
 { 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v16.0 MIB Edition");
+    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter - v17.1 Anti-Exploit");
     m_window->setFramerateLimit(60);
 
     bool fonteCarregou = false;
@@ -119,108 +120,108 @@ void Game::wrapText(sf::Text& text, float maxWidth) {
     text.setString(wrappedString);
 }
 
-// --- DADOS ---
+// --- DADOS DOS MEMES ---
 void Game::inicializarMemes() {
-    auto fofao = std::make_shared<Meme>("FOFAO DA CARRETA", "Facil", "assets/fofao.jpg"); fofao->adicionarCaracteristica("E conhecido por dancar e fazer parkour em muros.");
-    auto dollynho = std::make_shared<Meme>("DOLLYNHO", "Facil", "assets/dollynho.jpg"); dollynho->adicionarCaracteristica("Tem formato de garrafa e diz ser seu amiguinho.");
-    auto bilu = std::make_shared<Meme>("ET BILU", "Facil", "assets/bilu.jpg"); bilu->adicionarCaracteristica("Vive no mato e pede para buscarem conhecimento.");
-    auto jeremias = std::make_shared<Meme>("JEREMIAS", "Facil", "assets/jeremias.jpg"); jeremias->adicionarCaracteristica("Foi detido e disse que se pudesse matava mil.");
-    auto borabill = std::make_shared<Meme>("BORA BILL", "Medio", "assets/borabill.jpg"); borabill->adicionarCaracteristica("Ficou famoso no futebol de varzea gritando Bora Bill.");
-    auto freddie = std::make_shared<Meme>("FREDDIE PRATEADO", "Medio", "assets/freddie.jpg"); freddie->adicionarCaracteristica("Usa roupa de banho e tem a pele pintada de prata.");
-    auto nazare = std::make_shared<Meme>("NAZARE CONFUSA", "Medio", "assets/nazare.jpg"); nazare->adicionarCaracteristica("Olha para o nada vendo formulas matematicas.");
-    auto gravida = std::make_shared<Meme>("GRAVIDA DE TAUBATE", "Medio", "assets/gravida.jpg"); gravida->adicionarCaracteristica("Enganou o pais com uma barriga falsa gigante.");
-    auto gretchen = std::make_shared<Meme>("GRETCHEN", "Dificil", "assets/gretchen.jpg"); gretchen->adicionarCaracteristica("A rainha dos memes e do rebolado na internet.");
-    auto paloma = std::make_shared<Meme>("ADVOGADO PALOMA", "Dificil", "assets/paloma.jpg"); paloma->adicionarCaracteristica("Advogado de voz fina que pede desculpas.");
-    auto agostinho = std::make_shared<Meme>("AGOSTINHO CARRARA", "Dificil", "assets/agostinho.jpg"); agostinho->adicionarCaracteristica("Taxista que usa roupas com estampas exageradas.");
-    auto menina = std::make_shared<Meme>("MENINA REVOLTADA", "Dificil", "assets/menina.jpg"); menina->adicionarCaracteristica("Gritou com a Xuxa perguntando que Xou e esse.");
+    auto fofao = std::make_shared<Meme>("FOFAO DA CARRETA", "Facil", "assets/fofao.jpg"); fofao->adicionarCaracteristica("Dizem que ele anda de trenzinho e sobe em muros.");
+    auto dollynho = std::make_shared<Meme>("DOLLYNHO", "Facil", "assets/dollynho.jpg"); dollynho->adicionarCaracteristica("Tem formato de garrafa e diz ser nosso amiguinho.");
+    auto bilu = std::make_shared<Meme>("ET BILU", "Facil", "assets/bilu.jpg"); bilu->adicionarCaracteristica("Vive se escondendo no mato e pede para buscarem conhecimento.");
+    auto jeremias = std::make_shared<Meme>("JEREMIAS", "Facil", "assets/jeremias.jpg"); jeremias->adicionarCaracteristica("Foi detido embriagado e disse que se pudesse matava mil.");
+    auto borabill = std::make_shared<Meme>("BORA BILL", "Medio", "assets/borabill.jpg"); borabill->adicionarCaracteristica("Ficou famoso no futebol de varzea gritando 'Bora Bill'.");
+    auto freddie = std::make_shared<Meme>("FREDDIE PRATEADO", "Medio", "assets/freddie.jpg"); freddie->adicionarCaracteristica("Usa bigode, roupa de banho e tem a pele pintada de prata.");
+    auto nazare = std::make_shared<Meme>("NAZARE CONFUSA", "Medio", "assets/nazare.jpg"); nazare->adicionarCaracteristica("Olha para o nada com cara de duvida vendo formulas matematicas.");
+    auto gravida = std::make_shared<Meme>("GRAVIDA DE TAUBATE", "Medio", "assets/gravida.jpg"); gravida->adicionarCaracteristica("Enganou a midia com uma barriga falsa gigante de quadruplos.");
+    auto gretchen = std::make_shared<Meme>("GRETCHEN", "Dificil", "assets/gretchen.jpg"); gretchen->adicionarCaracteristica("A rainha da internet, conhecida por seus gifs e rebolado.");
+    auto paloma = std::make_shared<Meme>("ADVOGADO PALOMA", "Dificil", "assets/paloma.jpg"); paloma->adicionarCaracteristica("Advogado de voz fina que pede desculpas pelo vacilo.");
+    auto agostinho = std::make_shared<Meme>("AGOSTINHO CARRARA", "Dificil", "assets/agostinho.jpg"); agostinho->adicionarCaracteristica("Taxista que adora usar camisas com estampas exageradas.");
+    auto menina = std::make_shared<Meme>("MENINA REVOLTADA", "Dificil", "assets/menina.jpg"); menina->adicionarCaracteristica("Ficou famosa ao gritar 'Que Xou da Xuxa e esse?'");
     m_todosMemes = { fofao, dollynho, bilu, jeremias, borabill, freddie, nazare, gravida, gretchen, paloma, agostinho, menina };
 }
 
-// --- DICAS CULTURAIS COMPLEXAS ---
+// --- DICAS REVISADAS ---
 void Game::inicializarPaises() {
     auto br = std::make_shared<Country>("BRASIL", "assets/brasil.jpg"); 
     br->adicionarLocal("Rio de Janeiro", false); br->adicionarLocal("Sao Paulo", false); br->adicionarLocal("Testemunha", true, "MEME"); 
     br->adicionarFraseNegativa("Vixi, aqui so tem boleto pra pagar.");
-    br->adicionarDicaSobreMim("O suspeito comprou uma camisa verde e amarela e foi ver futebol.");
-    br->adicionarDicaSobreMim("Disseram que ele foi comer feijoada e ouvir samba.");
+    br->adicionarDicaSobreMim("Ele disse que queria comprar uma camisa verde e amarela.");
+    br->adicionarDicaSobreMim("Mencionou que estava com desejo de comer feijoada e ouvir samba.");
 
     auto jp = std::make_shared<Country>("JAPAO", "assets/japao.jpg"); 
     jp->adicionarLocal("Tokyo", false); jp->adicionarLocal("Kyoto", false); jp->adicionarLocal("Testemunha", true, "MEME"); 
     jp->adicionarFraseNegativa("Sumimasen, nao vi ninguem.");
-    jp->adicionarDicaSobreMim("O alvo foi visto comprando peixe cru e lendo mangá.");
-    jp->adicionarDicaSobreMim("Ele pegou um trem-bala para ver as cerejeiras florescerem.");
+    jp->adicionarDicaSobreMim("Perguntou onde poderia comprar mangás originais e comer sushi.");
+    jp->adicionarDicaSobreMim("Disse que precisava pegar o trem-bala para ver as cerejeiras.");
 
     auto fr = std::make_shared<Country>("FRANCA", "assets/franca.jpg"); 
     fr->adicionarLocal("Paris", false); fr->adicionarLocal("Nice", false); fr->adicionarLocal("Testemunha", true, "MEME"); 
     fr->adicionarFraseNegativa("Non, je ne sais pas.");
-    fr->adicionarDicaSobreMim("O suspeito foi visitar a Torre Eiffel e comeu escargot.");
-    fr->adicionarDicaSobreMim("Viram ele passeando no Louvre vendo quadros famosos.");
+    fr->adicionarDicaSobreMim("Comentou que queria tirar uma foto romântica na Torre Eiffel.");
+    fr->adicionarDicaSobreMim("Disse que iria visitar o Museu do Louvre para ver a Mona Lisa.");
 
     auto us = std::make_shared<Country>("EUA", "assets/eua.jpg"); 
     us->adicionarLocal("Nova York", false); us->adicionarLocal("Los Angeles", false); us->adicionarLocal("Testemunha", true, "MEME"); 
     us->adicionarFraseNegativa("Nope, nothing here.");
-    us->adicionarDicaSobreMim("Ele foi comer hamburguer e ver a Estatua da Liberdade.");
-    us->adicionarDicaSobreMim("Disseram que ele foi tentar a sorte em Hollywood.");
+    us->adicionarDicaSobreMim("Estava procurando onde vendem os melhores hamburgueres e hot dogs.");
+    us->adicionarDicaSobreMim("Disse que queria ver a Estatua da Liberdade de perto.");
 
     auto it = std::make_shared<Country>("ITALIA", "assets/italia.jpg"); 
     it->adicionarLocal("Roma", false); it->adicionarLocal("Veneza", false); it->adicionarLocal("Testemunha", true, "MEME"); 
     it->adicionarFraseNegativa("Mamma mia, no!");
-    it->adicionarDicaSobreMim("O sujeito foi comer pizza e visitar o Coliseu.");
-    it->adicionarDicaSobreMim("Viram ele andando de gondola pelos canais.");
+    it->adicionarDicaSobreMim("Perguntou qual o caminho mais rapido para o Coliseu.");
+    it->adicionarDicaSobreMim("Disse que queria andar de gôndola e comer uma pizza autêntica.");
 
     auto eg = std::make_shared<Country>("EGITO", "assets/egito.jpg"); 
     eg->adicionarLocal("Cairo", false); eg->adicionarLocal("Luxor", false); eg->adicionarLocal("Testemunha", true, "MEME"); 
     eg->adicionarFraseNegativa("Apenas areia e camelos.");
-    eg->adicionarDicaSobreMim("O alvo foi ver as grandes Piramides e a Esfinge.");
-    eg->adicionarDicaSobreMim("Disseram que ele foi procurar tesouros no rio Nilo.");
+    eg->adicionarDicaSobreMim("Estava ansioso para ver as grandes Piramides e a Esfinge.");
+    eg->adicionarDicaSobreMim("Perguntou se era perigoso navegar pelo rio Nilo.");
 
     auto ru = std::make_shared<Country>("RUSSIA", "assets/russia.jpg"); 
     ru->adicionarLocal("Moscou", false); ru->adicionarLocal("Siberia", false); ru->adicionarLocal("Testemunha", true, "MEME"); 
     ru->adicionarFraseNegativa("Nyet.");
-    ru->adicionarDicaSobreMim("Ele comprou um casaco de pele para o frio extremo.");
-    ru->adicionarDicaSobreMim("Foi visto na Praca Vermelha bebendo vodka.");
+    ru->adicionarDicaSobreMim("Disse que precisava comprar um casaco grosso para o frio.");
+    ru->adicionarDicaSobreMim("Mencionou que queria visitar a Praca Vermelha.");
 
     auto ch = std::make_shared<Country>("CHINA", "assets/china.jpg"); 
     ch->adicionarLocal("Pequim", false); ch->adicionarLocal("Xangai", false); ch->adicionarLocal("Testemunha", true, "MEME"); 
     ch->adicionarFraseNegativa("Mei you.");
-    ch->adicionarDicaSobreMim("O suspeito foi caminhar na Grande Muralha.");
-    ch->adicionarDicaSobreMim("Viram ele comendo com palitinhos e vendo pandas.");
+    ch->adicionarDicaSobreMim("Falou que seu sonho era caminhar na Grande Muralha.");
+    ch->adicionarDicaSobreMim("Perguntou onde poderia ver ursos pandas.");
 
     auto uk = std::make_shared<Country>("INGLATERRA", "assets/inglaterra.jpg"); 
     uk->adicionarLocal("Londres", false); uk->adicionarLocal("Liverpool", false); uk->adicionarLocal("Testemunha", true, "MEME"); 
     uk->adicionarFraseNegativa("Sorry, mate.");
-    uk->adicionarDicaSobreMim("Ele foi tomar cha com a Realeza e ver o Big Ben.");
-    uk->adicionarDicaSobreMim("O alvo pegou um onibus vermelho de dois andares.");
+    uk->adicionarDicaSobreMim("Perguntou se a Rainha estava no palácio.");
+    uk->adicionarDicaSobreMim("Disse que queria ouvir as badaladas do Big Ben.");
 
     auto mx = std::make_shared<Country>("MEXICO", "assets/mexico.jpg"); 
     mx->adicionarLocal("Cancun", false); mx->adicionarLocal("Acapulco", false); mx->adicionarLocal("Testemunha", true, "MEME"); 
     mx->adicionarFraseNegativa("No senor.");
-    mx->adicionarDicaSobreMim("O suspeito colocou um sombrero e foi comer tacos apimentados.");
-    mx->adicionarDicaSobreMim("Foi visto ouvindo mariachis e bebendo tequila.");
+    mx->adicionarDicaSobreMim("Perguntou onde poderia comer tacos bem apimentados.");
+    mx->adicionarDicaSobreMim("Disse que queria ouvir mariachis tocando na praça.");
 
     auto ca = std::make_shared<Country>("CANADA", "assets/canada.jpg"); 
     ca->adicionarLocal("Toronto", false); ca->adicionarLocal("Vancouver", false); ca->adicionarLocal("Testemunha", true, "MEME"); 
     ca->adicionarFraseNegativa("Sorry.");
-    ca->adicionarDicaSobreMim("Ele foi ver a neve e comer panquecas com xarope.");
-    ca->adicionarDicaSobreMim("Disseram que ele viu um alce e foi muito educado.");
+    ca->adicionarDicaSobreMim("Disse que queria ver a neve e comer panquecas com xarope.");
+    ca->adicionarDicaSobreMim("Perguntou se era facil encontrar alces nas florestas.");
 
     auto in = std::make_shared<Country>("INDIA", "assets/india.jpg"); 
     in->adicionarLocal("Delhi", false); in->adicionarLocal("Mumbai", false); in->adicionarLocal("Taj Mahal", true, "MEME"); 
     in->adicionarFraseNegativa("Nao, amigo.");
-    in->adicionarDicaSobreMim("O alvo foi visitar o Taj Mahal e comer curry.");
-    in->adicionarDicaSobreMim("Viram ele andando de elefante em um festival.");
+    in->adicionarDicaSobreMim("Disse que queria visitar o Taj Mahal.");
+    in->adicionarDicaSobreMim("Perguntou onde serviam o melhor curry da cidade.");
 
     auto es = std::make_shared<Country>("ESPANHA", "assets/espanha.jpg"); 
     es->adicionarLocal("Madrid", false); es->adicionarLocal("Barcelona", false); es->adicionarLocal("Testemunha", true, "MEME"); 
     es->adicionarFraseNegativa("Que va.");
-    es->adicionarDicaSobreMim("O suspeito foi ver uma tourada e dancar flamenco.");
-    es->adicionarDicaSobreMim("Ele parou para comer paella e tirar uma sesta.");
+    es->adicionarDicaSobreMim("Disse que queria assistir a uma dança de flamenco.");
+    es->adicionarDicaSobreMim("Perguntou onde poderia comer uma paella autêntica.");
 
     auto au = std::make_shared<Country>("AUSTRALIA", "assets/australia.jpg"); 
     au->adicionarLocal("Sydney", false); au->adicionarLocal("Melbourne", false); au->adicionarLocal("Testemunha", true, "MEME"); 
     au->adicionarFraseNegativa("No worries.");
-    au->adicionarDicaSobreMim("Ele foi surfar e ver cangurus pulando.");
-    au->adicionarDicaSobreMim("Disseram que ele visitou a opera house no porto.");
+    au->adicionarDicaSobreMim("Perguntou onde ficavam as melhores praias para surfar.");
+    au->adicionarDicaSobreMim("Disse que queria ver cangurus na natureza.");
 
     m_todosPaises = { br, jp, fr, us, it, eg, ru, ch, uk, mx, ca, in, es, au };
 }
@@ -258,6 +259,8 @@ void Game::iniciarNovaMissao() {
     else if (medioRestante > 0) { nivel = "Medio"; rota = 5; m_nivelAtual = 2; } 
     else { nivel = "Dificil"; rota = 7; m_nivelAtual = 3; }
 
+    m_valorPorPista = 100.0f / (float)rota;
+
     m_alvoAtual = sortearMemeDisponivel(nivel);
     if (!m_alvoAtual) { m_estado = EstadoGame::ZEROU; return; }
 
@@ -268,7 +271,6 @@ void Game::iniciarNovaMissao() {
     atualizarFundo(); 
 }
 
-// --- LOGICA REVISADA DE DISTRIBUIÇÃO DE PISTAS ---
 void Game::gerarMissaoLinear(int tamanho) {
     if((int)m_todosPaises.size() < tamanho*2 + 1) return;
     std::random_device rd; std::mt19937 g(rd());
@@ -281,39 +283,33 @@ void Game::gerarMissaoLinear(int tamanho) {
 
     for(int i=0; i<tamanho; i++) {
         auto origem = rota[i]; auto destino = rota[i+1]; auto errado = errados[i % errados.size()];
-        
-        // Configura erro
         auto locsErr = errado->getLocais();
         for(int k=0; k<(int)locsErr.size(); k++) errado->atualizarTextoLocal(k, errado->getFraseNegativaRegional());
         errado->definirDestinos(origem, origem, true);
-        
-        // Configura caminhos
         if(rand()%2) origem->definirDestinos(destino, errado, true); else origem->definirDestinos(errado, destino, false);
         
-        // --- PREPARAÇÃO DE DICAS COMPLEXAS ---
         auto locsOri = origem->getLocais();
-        auto dicasDestino = destino->getTodasDicas(); // Pega dicas culturais do PRÓXIMO país
-        std::shuffle(dicasDestino.begin(), dicasDestino.end(), g); // Embaralha para variar
-        
+        auto dicasDestino = destino->getTodasDicas(); 
+        std::shuffle(dicasDestino.begin(), dicasDestino.end(), g); 
         int contadorDicasDestino = 0;
 
         for(int k=0; k<(int)locsOri.size(); k++) {
             if(locsOri[k].revelaMeme) {
-                // 1 LOCAL: DICA SOBRE O MEME (QUEM É)
-                origem->atualizarTextoLocal(k, "INFORMANTE: " + m_alvoAtual->getCaracteristicaAleatoria()); 
+                origem->atualizarTextoLocal(k, m_alvoAtual->getCaracteristicaAleatoria()); 
             } else {
-                // 2 LOCAIS: DICAS SOBRE O PRÓXIMO PAÍS
                 if (contadorDicasDestino < (int)dicasDestino.size()) {
-                    origem->atualizarTextoLocal(k, "TESTEMUNHA: " + dicasDestino[contadorDicasDestino]);
+                    origem->atualizarTextoLocal(k, dicasDestino[contadorDicasDestino]);
                     contadorDicasDestino++;
                 } else {
-                    // Fallback se faltar dica
-                    origem->atualizarTextoLocal(k, "TESTEMUNHA: O suspeito viajou para um lugar onde: " + destino->getFraseNegativaRegional());
+                    origem->atualizarTextoLocal(k, "O suspeito perguntou como chegar em um lugar onde dizem: " + destino->getFraseNegativaRegional());
                 }
             }
         }
     }
     rota[tamanho]->definirDestinos(nullptr, nullptr, false); m_paisAtual = rota[0];
+    
+    // --- RESET DO CONTROLE DE CLIQUES NA CIDADE INICIAL ---
+    m_pistasVisitadas.assign(m_paisAtual->getLocais().size(), false);
 }
 
 void Game::processEvents() {
@@ -354,18 +350,27 @@ void Game::processEvents() {
                                             m_sprMeme.setTexture(m_texMeme, true);
                                             sf::FloatRect b = m_sprMeme.getLocalBounds();
                                             m_sprMeme.setOrigin({b.size.x/2, b.size.y/2});
-                                            m_sprMeme.setPosition({900.f, 360.f}); // Posição para abdução
+                                            m_sprMeme.setPosition({900.f, 360.f}); 
                                             float s = 200.f/b.size.y; m_sprMeme.setScale({s,s});
                                         }
                                         m_estado = EstadoGame::ABDUZINDO; m_sound.playConfirmar();
                                     } else { m_estado = EstadoGame::GAME_OVER; m_sound.playErro(); }
                                 } else { m_estado = EstadoGame::VIAJANDO; m_sound.playConfirmar(); }
                             } else {
+                                // Lógica de Investigação
                                 m_horasRestantes -= CUSTO_INVESTIGAR;
                                 m_textoFeedback.setString(m_paisAtual->getLocais()[i].pistaTexto);
                                 wrapText(m_textoFeedback, 1200.f); 
                                 m_sound.playConfirmar();
-                                if(m_paisAtual->getLocais()[i].revelaMeme) { m_energiaLaser += 34.0f; if(m_energiaLaser>100) m_energiaLaser=100; }
+                                
+                                // --- CORREÇÃO: VERIFICA SE JÁ FOI CLICADO ---
+                                if (i < m_pistasVisitadas.size() && !m_pistasVisitadas[i]) {
+                                    if(m_paisAtual->getLocais()[i].revelaMeme) { 
+                                        m_energiaLaser += m_valorPorPista; 
+                                        if(m_energiaLaser > 100.0f) m_energiaLaser = 100.0f; 
+                                    }
+                                    m_pistasVisitadas[i] = true; // Marca como visitado
+                                }
                             }
                         }
                         else if(m_estado == EstadoGame::VIAJANDO) {
@@ -373,8 +378,8 @@ void Game::processEvents() {
                             auto prox = (i==0) ? m_paisAtual->getOpcaoA() : m_paisAtual->getOpcaoB();
                             if(prox) {
                                 m_paisAtual = prox; m_estado = EstadoGame::INVESTIGANDO; m_sound.playViagem(); atualizarFundo(); 
-                                bool ac = false; for(auto p:m_rotaVitoria) if(p==m_paisAtual) ac=true;
-                                if(ac) { m_energiaLaser+=35.f; if(m_energiaLaser>100) m_energiaLaser=100; }
+                                // --- RESET DO CONTROLE DE CLIQUES AO MUDAR DE CIDADE ---
+                                m_pistasVisitadas.assign(m_paisAtual->getLocais().size(), false);
                             }
                         }
                         else if(m_estado == EstadoGame::ABDUZINDO) {
@@ -382,12 +387,11 @@ void Game::processEvents() {
                             if(i < todos.size()) {
                                 if(todos[i] == m_alvoAtual) { 
                                     m_estado = EstadoGame::VITORIA; m_nomesCapturados.push_back(m_alvoAtual->getNome());
-                                    // CENTRALIZA O MEME NA VITORIA
                                     if(tentarCarregarImagem(m_texMeme, m_alvoAtual->getImagemPath())) {
                                         m_sprMeme.setTexture(m_texMeme, true);
                                         sf::FloatRect b = m_sprMeme.getLocalBounds();
                                         m_sprMeme.setOrigin({b.size.x/2, b.size.y/2});
-                                        m_sprMeme.setPosition({640.f, 360.f}); // CENTRO
+                                        m_sprMeme.setPosition({640.f, 360.f}); 
                                         float s = 450.f/b.size.y; m_sprMeme.setScale({s,s});
                                     }
                                     m_sound.playSucesso();
@@ -434,7 +438,6 @@ void Game::update() {
                 t.setOutlineColor(sf::Color::Black); t.setOutlineThickness(2.f); m_botoesLocais.push_back(t); y+=40.f;
             }
             sf::Text act(m_font); act.setCharacterSize(24); act.setPosition({50.f, y+30.f}); act.setOutlineColor(sf::Color::Black); act.setOutlineThickness(2.f);
-            // MUDANCA DE TERMINOLOGIA
             if(m_paisAtual->getOpcaoA() == nullptr) act.setString(m_energiaLaser>=99 ? ">> INICIAR PROTOCOLO DE INTERCEPTACAO <<" : "ESTUDO INSUFICIENTE");
             else act.setString(">> SOLICITAR TRANSPORTE <<");
             m_botoesLocais.push_back(act);
@@ -466,14 +469,12 @@ void Game::render() {
         static sf::Clock blink; if(blink.getElapsedTime().asSeconds() < 0.6f) m_window->draw(m_modalBotao);
         if(blink.getElapsedTime().asSeconds() > 1.2f) blink.restart();
     } else {
-        // --- LOGICA DE EXIBIR O MEME NA TELA DE INVESTIGAÇÃO ---
-        // Se a energia está cheia, o meme aparece como recompensa abaixo da barra
         if (m_estado == EstadoGame::INVESTIGANDO && m_energiaLaser >= 99.f) {
             if(tentarCarregarImagem(m_texMeme, m_alvoAtual->getImagemPath())) {
                 m_sprMeme.setTexture(m_texMeme, true);
                 sf::FloatRect b = m_sprMeme.getLocalBounds();
-                m_sprMeme.setOrigin({b.size.x/2, 0}); // Ancora no topo
-                m_sprMeme.setPosition({1050.f, 150.f}); // Abaixo da barra de energia
+                m_sprMeme.setOrigin({b.size.x/2, 0}); 
+                m_sprMeme.setPosition({1050.f, 150.f}); 
                 float s = 150.f/b.size.y; m_sprMeme.setScale({s,s});
                 m_window->draw(m_sprMeme);
             }
@@ -482,7 +483,6 @@ void Game::render() {
         if(m_estado == EstadoGame::ABDUZINDO || m_estado == EstadoGame::VITORIA) {
             if(m_texMeme.getSize().x > 0) m_window->draw(m_sprMeme);
             if(m_estado == EstadoGame::VITORIA) {
-                // TEXTO DO CARIMBO ATUALIZADO
                 sf::Text carimbo(m_font); carimbo.setString("MEME CATALOGADO\nPELA NASA"); 
                 carimbo.setCharacterSize(60); carimbo.setFillColor(sf::Color(0,255,0,200));
                 carimbo.setRotation(sf::degrees(-15.f)); carimbo.setOrigin({carimbo.getLocalBounds().size.x/2, carimbo.getLocalBounds().size.y/2});

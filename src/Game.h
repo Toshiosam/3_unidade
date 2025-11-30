@@ -46,7 +46,12 @@ private:
     sf::RectangleShape m_modalFundo, m_modalCaixa;
     sf::RectangleShape m_bgTexto, m_bgInfo;
 
-    float m_energiaLaser; 
+    float m_energiaLaser;
+    float m_valorPorPista;
+    
+    // --- NOVA VARIÁVEL DE CONTROLE ---
+    std::vector<bool> m_pistasVisitadas; // Impede clicar 2x na mesma pista
+
     SoundManager m_sound;
     std::vector<sf::Text> m_botoesLocais; 
     int m_opcaoSelecionada;
