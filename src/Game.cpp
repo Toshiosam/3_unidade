@@ -17,7 +17,7 @@ Game::Game() :
 { 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter");
+    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter: O brasileiro precisa ser estudado", sf::Style::Close);
     m_window->setFramerateLimit(60);
 
     bool fonteCarregou = false;
@@ -773,7 +773,7 @@ void Game::render() {
             sf::Text fim(m_font); fim.setString("MISSAO CUMPRIDA"); fim.setCharacterSize(60); fim.setFillColor(sf::Color::Yellow); fim.setPosition({350.f, 100.f});
             sf::Text sub(m_font); sub.setString("TODOS OS SUJEITOS FORAM CATALOGADOS.\nO BRASIL ESTA SEGURO (POR ENQUANTO)."); sub.setCharacterSize(24); sub.setFillColor(sf::Color::White); sub.setPosition({300.f, 250.f});
             
-            sf::Text cred(m_font); cred.setString("CREDITOS:\nDesenvolvimento: Voce\nEngine: SFML\nInspiracao: Carmen Sandiego"); cred.setCharacterSize(20); cred.setFillColor(sf::Color::Cyan); cred.setPosition({450.f, 400.f});
+            sf::Text cred(m_font); cred.setString("CREDITOS:\nDesenvolvimento: Lucas Toshio\nEngine: SFML\nInspiracao: Carmen Sandiego (ms-dos)"); cred.setCharacterSize(20); cred.setFillColor(sf::Color::Cyan); cred.setPosition({450.f, 400.f});
             
             sf::Text res(m_font); res.setString("[PRESSIONE ENTER PARA REINICIAR]"); res.setCharacterSize(20); res.setFillColor(sf::Color::Green); res.setPosition({400.f, 600.f});
 
