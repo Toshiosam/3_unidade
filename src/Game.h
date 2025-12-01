@@ -7,8 +7,8 @@
 #include "Meme.h"
 #include "SoundManager.h"
 
-// Adicionado estado PROMOVIDO
-enum class EstadoGame { INVESTIGANDO, VIAJANDO, ABDUZINDO, VITORIA, GAME_OVER, ZEROU, INTRO, PROMOVIDO };
+// Adicionado estado CREDITOS
+enum class EstadoGame { INVESTIGANDO, VIAJANDO, ABDUZINDO, VITORIA, GAME_OVER, ZEROU, INTRO, PROMOVIDO, CREDITOS };
 
 class Game {
 public:
@@ -25,6 +25,7 @@ private:
     void inicializarMemes();
     void iniciarNovaMissao();
     void gerarMissaoLinear(int tamanhoRota);
+    void resetarJogo(); // Nova função para reiniciar tudo
     
     std::shared_ptr<Meme> sortearMemeDisponivel(std::string nivel);
     int contarMemesRestantes(std::string nivel);
