@@ -9,7 +9,7 @@
 ## 🎮 Game Design Document (GDD)
 
 ### 1. Visão Geral (High Concept)
-Um jogo de "esconde-esconde" global onde o jogador deve usar raciocínio lógico e conhecimentos de cultura da internet brasileira para interceptar alvos antes que o tempo acabe. O tom é humorístico, misturando pixel art com a cultura "maker" e referências virais.
+Um jogo de "esconde-esconde" global onde o jogador deve usar raciocínio lógico e conhecimentos de cultura da internet brasileira para interceptar alvos antes que o tempo acabe. O tom é humorístico, misturando pixel art com a cultura e referências virais.
 
 ### 2. Narrativa e Progressão
 * **Premissa:** A NASA descobriu que as leis da física não se aplicam ao Brasil. Para conter essa anomalia, foi criada a divisão M.I.B. (Men In Brazil).
@@ -39,4 +39,4 @@ O ciclo de jogo consiste em quatro etapas estratégicas:
 * **Difícil (M.I.B.):** Rotas longas (7 Países). Tempo "Hardcore" (39h). Zero margem para erro.
 
 ### 5. Personagens (Os Alvos)
-O jogo conta com 12 lendas da
+O jogo conta com 12 lendas da internet, voce será capaz de capturar todos e se tornar uma lenda viva entre os M.I.Bs ????
