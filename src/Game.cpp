@@ -8,6 +8,23 @@
 const int CUSTO_INVESTIGACAO_FIXO = 1;
 const int CUSTO_VIAGEM_FIXO = 3;
 
+// --- FUNÇÃO AUXILIAR DE CHROMA KEY (Movidapara o topo) ---
+bool tentarCarregarImagem(sf::Texture& texture, std::string caminhoOriginal) {
+    std::vector<std::string> tentativas = { caminhoOriginal, "src/" + caminhoOriginal, "../" + caminhoOriginal, "../src/" + caminhoOriginal };
+    for (const auto& caminho : tentativas) {
+        std::ifstream f(caminho.c_str());
+        if (f.good()) { 
+            sf::Image imagemTemp;
+            if (imagemTemp.loadFromFile(caminho)) {
+                // Remove fundo branco
+                imagemTemp.createMaskFromColor(sf::Color::White);
+                if (texture.loadFromImage(imagemTemp)) return true;
+            }
+        }
+    }
+    return false;
+}
+
 Game::Game() : 
     m_textoInfo(m_font), m_textoFeedback(m_font), m_textoTempo(m_font),
     m_labelLaser(m_font), m_labelTempo(m_font),
@@ -17,7 +34,7 @@ Game::Game() :
 { 
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter: O brasileiro precisa ser estudado", sf::Style::Close);
+    m_window = std::make_shared<sf::RenderWindow>(sf::VideoMode({1280, 720}), "Meme Hunter");
     m_window->setFramerateLimit(60);
 
     bool fonteCarregou = false;
@@ -39,7 +56,7 @@ Game::Game() :
 
     configTexto(m_textoFeedback, 22, sf::Color::White, 40.f, 580.f);
 
-    configTexto(m_labelTempo, 18, sf::Color::White, 900.f, 25.f); m_labelTempo.setString("TEMPO RESTANTE:");
+    configTexto(m_labelTempo, 18, sf::Color::White, 900.f, 25.f); m_labelTempo.setString("ACOES RESTANTES:");
     m_labelTempo.setOutlineColor(sf::Color::Black); m_labelTempo.setOutlineThickness(2.f);
 
     configTexto(m_textoTempo, 30, sf::Color::Red, 1080.f, 18.f);
@@ -52,7 +69,7 @@ Game::Game() :
     m_barFundo.setFillColor(sf::Color(20,20,20, 200)); m_barFundo.setOutlineThickness(2); m_barFundo.setOutlineColor(sf::Color::White);
     m_barEnergia.setSize({0.f, 25.f}); m_barEnergia.setPosition({900.f, 110.f}); m_barEnergia.setFillColor(sf::Color(0, 255, 0));
 
-    // UI INTRO
+    // --- MODAL INTRO ---
     m_modalFundo.setSize({1280.f, 720.f}); m_modalFundo.setFillColor(sf::Color(0, 0, 0, 240));
     m_modalCaixa.setSize({950.f, 580.f}); 
     m_modalCaixa.setOrigin({475.f, 290.f}); 
@@ -105,27 +122,10 @@ void Game::run() {
     }
 }
 
-// Função Resetar Jogo (Para voltar ao início após os créditos)
 void Game::resetarJogo() {
     m_nomesCapturados.clear();
     m_nivelAtual = 1;
     m_estado = EstadoGame::INTRO;
-    // O texto do modal já está configurado no construtor, então voltamos ao INTRO
-}
-
-bool tentarCarregarImagem(sf::Texture& texture, std::string caminhoOriginal) {
-    std::vector<std::string> tentativas = { caminhoOriginal, "src/" + caminhoOriginal, "../" + caminhoOriginal, "../src/" + caminhoOriginal };
-    for (const auto& caminho : tentativas) {
-        std::ifstream f(caminho.c_str());
-        if (f.good()) { 
-            sf::Image imagemTemp;
-            if (imagemTemp.loadFromFile(caminho)) {
-                imagemTemp.createMaskFromColor(sf::Color::White);
-                if (texture.loadFromImage(imagemTemp)) return true;
-            }
-        }
-    }
-    return false;
 }
 
 void Game::atualizarFundo() {
@@ -155,7 +155,6 @@ void Game::wrapText(sf::Text& text, float maxWidth) {
 
 // --- DADOS DOS MEMES ---
 void Game::inicializarMemes() {
-    // Fofão
     auto fofao = std::make_shared<Meme>("Fofao da Carreta Furacao", "Facil", "assets/fofao.jpg"); 
     fofao->adicionarCaracteristica("Dizem que ele anda de trenzinho e faz acrobacias.");
     fofao->adicionarCaracteristica("Foi visto subindo em muros fazendo parkour.");
@@ -165,7 +164,6 @@ void Game::inicializarMemes() {
     fofao->adicionarCaracteristica("Sua origem e de Ribeirao Preto.");
     fofao->adicionarCaracteristica("O lema dele e 'Siga em frente, olhe para o lado'.");
 
-    // Dollynho
     auto dollynho = std::make_shared<Meme>("Dollynho", "Facil", "assets/dollynho.jpg"); 
     dollynho->adicionarCaracteristica("Tem formato de garrafa e cor verde.");
     dollynho->adicionarCaracteristica("Diz ser o seu amiguinho.");
@@ -175,7 +173,6 @@ void Game::inicializarMemes() {
     dollynho->adicionarCaracteristica("Tem um pai que tambem e uma garrafa grande.");
     dollynho->adicionarCaracteristica("Deseja feliz pascoa e feliz natal.");
 
-    // ET Bilu
     auto bilu = std::make_shared<Meme>("ET Bilu", "Facil", "assets/bilu.jpg"); 
     bilu->adicionarCaracteristica("Vive se escondendo no mato escuro.");
     bilu->adicionarCaracteristica("Sua frase famosa e 'Busquem conhecimento'.");
@@ -185,7 +182,6 @@ void Game::inicializarMemes() {
     bilu->adicionarCaracteristica("Dizem que ele e de Corguinho, no MS.");
     bilu->adicionarCaracteristica("Pede para que nao toquem nele.");
 
-    // Jeremias
     auto jeremias = std::make_shared<Meme>("Jeremias Muito Louco", "Facil", "assets/jeremias.jpg"); 
     jeremias->adicionarCaracteristica("Foi detido e deu uma entrevista lendaria.");
     jeremias->adicionarCaracteristica("Disse que se pudesse matava mil.");
@@ -195,7 +191,6 @@ void Game::inicializarMemes() {
     jeremias->adicionarCaracteristica("Cantou uma musica triste durante o depoimento.");
     jeremias->adicionarCaracteristica("Tem o sobrenome 'Muito Louco'.");
 
-    // Bora Bill
     auto borabill = std::make_shared<Meme>("Bill do Bora Bill", "Medio", "assets/borabill.jpg"); 
     borabill->adicionarCaracteristica("Ficou famoso no futebol de varzea.");
     borabill->adicionarCaracteristica("Um narrador grita o nome dele o tempo todo.");
@@ -205,7 +200,6 @@ void Game::inicializarMemes() {
     borabill->adicionarCaracteristica("Foi notado ate pelo Neymar.");
     borabill->adicionarCaracteristica("O meme surgiu no Ceara.");
 
-    // Freddie
     auto freddie = std::make_shared<Meme>("Freddie Mercury Prateado", "Medio", "assets/freddie.jpg"); 
     freddie->adicionarCaracteristica("Usa bigode igual ao cantor do Queen.");
     freddie->adicionarCaracteristica("Tem a pele inteiramente pintada de prata.");
@@ -215,7 +209,6 @@ void Game::inicializarMemes() {
     freddie->adicionarCaracteristica("Gosta de 'trocar uma ideia' com as pessoas.");
     freddie->adicionarCaracteristica("E interpretado pelo Eduardo Sterblitch.");
 
-    // Nazare
     auto nazare = std::make_shared<Meme>("Nazare Confusa", "Medio", "assets/nazare.jpg"); 
     nazare->adicionarCaracteristica("Olha para o nada com cara de duvida.");
     nazare->adicionarCaracteristica("Ve formulas matematicas flutuando no ar.");
@@ -225,7 +218,6 @@ void Game::inicializarMemes() {
     nazare->adicionarCaracteristica("Roubou a filha da vizinha na novela.");
     nazare->adicionarCaracteristica("Derrubou pessoas da escada.");
 
-    // Gravida
     auto gravida = std::make_shared<Meme>("Gravida de Taubate", "Medio", "assets/gravida.jpg"); 
     gravida->adicionarCaracteristica("Tem uma barriga redonda excessivamente grande.");
     gravida->adicionarCaracteristica("Alegou estar gravida de quadruplos.");
@@ -235,7 +227,6 @@ void Game::inicializarMemes() {
     gravida->adicionarCaracteristica("Seu advogado tentou defende-la sem sucesso.");
     gravida->adicionarCaracteristica("Virou fantasia de carnaval classica.");
 
-    // Gretchen
     auto gretchen = std::make_shared<Meme>("Gretchen", "Dificil", "assets/gretchen.jpg"); 
     gretchen->adicionarCaracteristica("E conhecida como a rainha dos memes e do rebolado.");
     gretchen->adicionarCaracteristica("Tem um gif para cada situacao da vida.");
@@ -245,7 +236,6 @@ void Game::inicializarMemes() {
     gretchen->adicionarCaracteristica("Ja casou muitas vezes.");
     gretchen->adicionarCaracteristica("E mae do Thammy.");
 
-    // Paloma
     auto paloma = std::make_shared<Meme>("Advogado Paloma", "Dificil", "assets/paloma.jpg"); 
     paloma->adicionarCaracteristica("E um advogado com uma voz muito fina.");
     paloma->adicionarCaracteristica("Pede desculpas pelo vacilo.");
@@ -255,7 +245,6 @@ void Game::inicializarMemes() {
     paloma->adicionarCaracteristica("Virou meme em audiencias online.");
     paloma->adicionarCaracteristica("Diz 'Senhor Juiz' com voz esganicada.");
 
-    // Augustinho
     auto agostinho = std::make_shared<Meme>("Augustinho Carrara", "Dificil", "assets/agostinho.jpg"); 
     agostinho->adicionarCaracteristica("E um taxista do Rio de Janeiro.");
     agostinho->adicionarCaracteristica("Usa camisas com estampas muito exageradas.");
@@ -265,7 +254,6 @@ void Game::inicializarMemes() {
     agostinho->adicionarCaracteristica("Sua picape de taxi e iconica.");
     agostinho->adicionarCaracteristica("Virou icone de moda 'kitsch'.");
 
-    // Menina Revoltada
     auto menina = std::make_shared<Meme>("Menina - que show da xuxa e esse", "Dificil", "assets/menina.jpg"); 
     menina->adicionarCaracteristica("Ficou indignada com a organizacao de um evento.");
     menina->adicionarCaracteristica("Gritou a frase famosa: 'Que Xou da Xuxa e esse?'.");
@@ -388,7 +376,6 @@ std::shared_ptr<Meme> Game::sortearMemeDisponivel(std::string nivel) {
 }
 
 void Game::iniciarNovaMissao() {
-    // [NOVA LÓGICA DE FIM DE JOGO: VAI PARA A TELA DE CRÉDITOS]
     if (m_nomesCapturados.size() >= m_todosMemes.size()) { 
         m_estado = EstadoGame::CREDITOS; 
         m_sound.playSucesso(); 
@@ -493,6 +480,84 @@ void Game::gerarMissaoLinear(int tamanho) {
     m_pistasVisitadas.assign(m_paisAtual->getLocais().size(), false);
 }
 
+// --- FUNÇÃO DE AÇÃO CENTRALIZADA (MOUSE E TECLADO) ---
+void Game::executarAcao(int i) {
+    if (m_inputCooldown.getElapsedTime().asSeconds() < 0.5f) return;
+    m_inputCooldown.restart();
+
+    if(m_estado == EstadoGame::INVESTIGANDO) {
+        if (i == 0) return; // Cabeçalho
+
+        size_t numLocais = m_paisAtual->getLocais().size();
+        
+        if(i == numLocais + 1) { // Botão de Ação
+            if (m_paisAtual->getOpcaoA() == nullptr) {
+                if (m_energiaLaser >= 99.f) { 
+                    if(tentarCarregarImagem(m_texMeme, m_alvoAtual->getImagemPath())) {
+                        m_sprMeme.setTexture(m_texMeme, true);
+                        sf::FloatRect b = m_sprMeme.getLocalBounds();
+                        m_sprMeme.setOrigin({b.size.x/2, b.size.y/2});
+                        m_sprMeme.setPosition({900.f, 360.f}); 
+                        float s = 200.f/b.size.y; m_sprMeme.setScale({s,s});
+                    }
+                    m_estado = EstadoGame::ABDUZINDO; m_sound.playConfirmar();
+                } else { 
+                    m_sound.playErro(); 
+                }
+            } else { 
+                m_estado = EstadoGame::VIAJANDO; m_sound.playConfirmar(); 
+            }
+        } 
+        else if (i <= numLocais) { // Cidades
+            int cityIndex = i - 1; 
+            
+            if (cityIndex < m_pistasVisitadas.size()) {
+                if (!m_pistasVisitadas[cityIndex]) {
+                    m_horasRestantes -= CUSTO_INVESTIGACAO_FIXO;
+                    
+                    if(m_paisAtual->getLocais()[cityIndex].revelaMeme) { 
+                        m_energiaLaser += m_valorPorPista; 
+                        if(m_energiaLaser > 100.0f) m_energiaLaser = 100.0f; 
+                    }
+                    m_pistasVisitadas[cityIndex] = true; 
+                }
+            }
+
+            m_textoFeedback.setString(m_paisAtual->getLocais()[cityIndex].pistaTexto);
+            wrapText(m_textoFeedback, 1200.f); 
+            m_sound.playConfirmar();
+        }
+    }
+    else if(m_estado == EstadoGame::VIAJANDO) {
+        m_horasRestantes -= CUSTO_VIAGEM_FIXO;
+        auto prox = (i==0) ? m_paisAtual->getOpcaoA() : m_paisAtual->getOpcaoB();
+        if(prox) {
+            m_paisAtual = prox; 
+            m_estado = EstadoGame::INVESTIGANDO; 
+            m_sound.playViagem(); 
+            m_textoFeedback.setString("");
+            atualizarFundo(); 
+            m_pistasVisitadas.assign(m_paisAtual->getLocais().size(), false);
+        }
+    }
+    else if(m_estado == EstadoGame::ABDUZINDO) {
+        auto todos = m_todosMemes;
+        if(i < todos.size()) {
+            if(todos[i] == m_alvoAtual) { 
+                m_estado = EstadoGame::VITORIA; m_nomesCapturados.push_back(m_alvoAtual->getNome());
+                if(tentarCarregarImagem(m_texMeme, m_alvoAtual->getImagemPath())) {
+                    m_sprMeme.setTexture(m_texMeme, true);
+                    sf::FloatRect b = m_sprMeme.getLocalBounds();
+                    m_sprMeme.setOrigin({b.size.x/2, b.size.y/2});
+                    m_sprMeme.setPosition({640.f, 360.f}); 
+                    float s = 450.f/b.size.y; m_sprMeme.setScale({s,s});
+                }
+                m_sound.playSucesso();
+            } else { m_estado = EstadoGame::GAME_OVER; m_sound.playErro(); }
+        }
+    }
+}
+
 void Game::processEvents() {
     while (const std::optional event = m_window->pollEvent()) {
         if (event->is<sf::Event::Closed>()) m_window->close();
@@ -501,26 +566,31 @@ void Game::processEvents() {
             if (kp->code == sf::Keyboard::Key::Escape) m_window->close();
             if (kp->code == sf::Keyboard::Key::M) m_sound.toggleMute();
 
-            // [LÓGICA PARA SAIR DOS CRÉDITOS]
             if (m_estado == EstadoGame::CREDITOS) {
-                if (kp->code == sf::Keyboard::Key::Enter) { resetarJogo(); }
-                return;
+                if (kp->code == sf::Keyboard::Key::Enter) { resetarJogo(); } return;
             }
-
             if (m_estado == EstadoGame::PROMOVIDO) {
-                if (kp->code == sf::Keyboard::Key::Enter) { iniciarNovaMissao(); }
-                return;
+                if (kp->code == sf::Keyboard::Key::Enter) { iniciarNovaMissao(); } return;
             }
-
             if (m_estado == EstadoGame::INTRO) {
                 if (kp->code == sf::Keyboard::Key::Enter || kp->code == sf::Keyboard::Key::Space) { m_sound.playConfirmar(); iniciarNovaMissao(); } return;
             }
+            if (m_estado == EstadoGame::VITORIA || m_estado == EstadoGame::GAME_OVER) {
+                 if (kp->code == sf::Keyboard::Key::Enter) { iniciarNovaMissao(); } return;
+            }
 
-            if (kp->code == sf::Keyboard::Key::Up) { m_opcaoSelecionada--; if(m_opcaoSelecionada<0) m_opcaoSelecionada=0; m_sound.playNavegar(); }
-            if (kp->code == sf::Keyboard::Key::Down) { if(m_opcaoSelecionada < (int)m_botoesLocais.size()-1) m_opcaoSelecionada++; m_sound.playNavegar(); }
+            if (kp->code == sf::Keyboard::Key::Up) { 
+                m_opcaoSelecionada--; 
+                if(m_opcaoSelecionada < 0) m_opcaoSelecionada = 0; 
+                m_sound.playNavegar(); 
+            }
+            if (kp->code == sf::Keyboard::Key::Down) { 
+                if(m_opcaoSelecionada < (int)m_botoesLocais.size()-1) m_opcaoSelecionada++; 
+                m_sound.playNavegar(); 
+            }
             
             if (kp->code == sf::Keyboard::Key::Enter) {
-                 if (m_estado == EstadoGame::VITORIA || m_estado == EstadoGame::GAME_OVER) { iniciarNovaMissao(); }
+                 executarAcao(m_opcaoSelecionada);
             }
         }
 
@@ -542,72 +612,9 @@ void Game::processEvents() {
                     sf::FloatRect clickArea({bounds.position.x - paddingX, bounds.position.y - paddingY}, {bounds.size.x + paddingX*2, bounds.size.y + paddingY*2});
 
                     if(clickArea.contains(pos)) {
-                        if(m_estado == EstadoGame::INVESTIGANDO) {
-                            if (i == 0) continue; 
-
-                            size_t numLocais = m_paisAtual->getLocais().size();
-                            
-                            if(i == numLocais + 1) { 
-                                if (m_paisAtual->getOpcaoA() == nullptr) {
-                                    if (m_energiaLaser >= 99.f) { 
-                                        if(tentarCarregarImagem(m_texMeme, m_alvoAtual->getImagemPath())) {
-                                            m_sprMeme.setTexture(m_texMeme, true);
-                                            sf::FloatRect b = m_sprMeme.getLocalBounds();
-                                            m_sprMeme.setOrigin({b.size.x/2, b.size.y/2});
-                                            m_sprMeme.setPosition({900.f, 360.f}); 
-                                            float s = 200.f/b.size.y; m_sprMeme.setScale({s,s});
-                                        }
-                                        m_estado = EstadoGame::ABDUZINDO; m_sound.playConfirmar();
-                                    } else { 
-                                        m_sound.playErro(); 
-                                    }
-                                } else { m_estado = EstadoGame::VIAJANDO; m_sound.playConfirmar(); }
-                            } else if (i <= numLocais) {
-                                int cityIndex = i - 1; 
-                                m_horasRestantes -= CUSTO_INVESTIGACAO_FIXO;
-                                m_textoFeedback.setString(m_paisAtual->getLocais()[cityIndex].pistaTexto);
-                                wrapText(m_textoFeedback, 1200.f); 
-                                m_sound.playConfirmar();
-                                
-                                if (cityIndex < m_pistasVisitadas.size() && !m_pistasVisitadas[cityIndex]) {
-                                    if(m_paisAtual->getLocais()[cityIndex].revelaMeme) { 
-                                        m_energiaLaser += m_valorPorPista; 
-                                        if(m_energiaLaser > 100.0f) m_energiaLaser = 100.0f; 
-                                    }
-                                    m_pistasVisitadas[cityIndex] = true; 
-                                }
-                            }
-                        }
-                        else if(m_estado == EstadoGame::VIAJANDO) {
-                            m_horasRestantes -= CUSTO_VIAGEM_FIXO;
-                            auto prox = (i==0) ? m_paisAtual->getOpcaoA() : m_paisAtual->getOpcaoB();
-                            if(prox) {
-                                m_paisAtual = prox; 
-                                m_estado = EstadoGame::INVESTIGANDO; 
-                                m_sound.playViagem(); 
-                                m_textoFeedback.setString("");
-                                atualizarFundo(); 
-                                m_pistasVisitadas.assign(m_paisAtual->getLocais().size(), false);
-                            }
-                        }
-                        else if(m_estado == EstadoGame::ABDUZINDO) {
-                            auto todos = m_todosMemes;
-                            if(i < todos.size()) {
-                                if(todos[i] == m_alvoAtual) { 
-                                    m_estado = EstadoGame::VITORIA; m_nomesCapturados.push_back(m_alvoAtual->getNome());
-                                    if(tentarCarregarImagem(m_texMeme, m_alvoAtual->getImagemPath())) {
-                                        m_sprMeme.setTexture(m_texMeme, true);
-                                        sf::FloatRect b = m_sprMeme.getLocalBounds();
-                                        m_sprMeme.setOrigin({b.size.x/2, b.size.y/2});
-                                        m_sprMeme.setPosition({640.f, 360.f}); 
-                                        float s = 450.f/b.size.y; m_sprMeme.setScale({s,s});
-                                    }
-                                    m_sound.playSucesso();
-                                } else { m_estado = EstadoGame::GAME_OVER; m_sound.playErro(); }
-                                
-                                return;
-                            }
-                        }
+                        m_opcaoSelecionada = i; 
+                        executarAcao(i);
+                        return; 
                     }
                 }
             }
@@ -632,7 +639,6 @@ void Game::update() {
         return;
     }
 
-    // [ESTADO DE CRÉDITOS]
     if(m_estado == EstadoGame::CREDITOS) {
         m_textoInfo.setString("FIM DE JOGO");
         return;
@@ -642,14 +648,21 @@ void Game::update() {
     if(m_estado == EstadoGame::ZEROU) { m_textoInfo.setString("VOCE ZEROU O JOGO!"); m_botoesLocais.clear(); return; }
     if(m_estado == EstadoGame::VITORIA) { m_textoInfo.setString("SUJEITO CONTIDO COM SUCESSO!"); m_botoesLocais.clear(); return; }
     
+    // [LÓGICA DE GAME OVER PROTEGIDA]
+    // Se o estado já é de Vitória ou Fim, não checa o tempo
     if (m_estado != EstadoGame::VITORIA && m_estado != EstadoGame::ZEROU && m_estado != EstadoGame::PROMOVIDO && m_estado != EstadoGame::CREDITOS) {
-        if(m_estado == EstadoGame::GAME_OVER || m_horasRestantes <= 0) { 
-            if(m_estado != EstadoGame::GAME_OVER) m_sound.playErro();
-            m_estado = EstadoGame::GAME_OVER; m_textoInfo.setString("GAME OVER"); m_botoesLocais.clear(); return; 
+        if(m_horasRestantes <= 0) { 
+            if(m_estado != EstadoGame::GAME_OVER) {
+                m_sound.playErro();
+                m_estado = EstadoGame::GAME_OVER; 
+                m_textoInfo.setString("GAME OVER"); 
+                m_botoesLocais.clear(); 
+            }
+            return; 
         }
     }
 
-    m_textoTempo.setString("T-" + std::to_string(m_horasRestantes));
+    m_textoTempo.setString("ACOES: " + std::to_string(m_horasRestantes));
     
     m_botoesLocais.clear(); float y = 150.f; 
 
@@ -756,27 +769,18 @@ void Game::render() {
         if(m_estado == EstadoGame::PROMOVIDO) {
             m_window->draw(m_modalFundo); 
             sf::Text promo(m_font); promo.setString("AGENTE PROMOVIDO!"); promo.setCharacterSize(70); promo.setFillColor(sf::Color::Yellow); promo.setOutlineColor(sf::Color::Red); promo.setOutlineThickness(4.f); promo.setStyle(sf::Text::Bold); promo.setRotation(sf::degrees(-10.f)); promo.setOrigin({promo.getLocalBounds().size.x/2, promo.getLocalBounds().size.y/2}); promo.setPosition({640.f, 300.f}); m_window->draw(promo);
-            
-            // [ATUALIZAÇÃO DO NOME DO RANK NA TELA]
-            std::string nomeRank = (m_nivelAtual == 2) ? "AGENTE DE CAMPO" : "AGENTE M.I.B.";
-            
-            sf::Text sub(m_font); sub.setString("NOVO RANK: " + nomeRank); sub.setCharacterSize(24); sub.setFillColor(sf::Color::White); sub.setOrigin({sub.getLocalBounds().size.x/2, sub.getLocalBounds().size.y/2}); sub.setPosition({640.f, 450.f}); m_window->draw(sub);
+            sf::Text sub(m_font); sub.setString("NOVO NIVEL DE ACESSO: " + std::to_string(m_nivelAtual)); sub.setCharacterSize(24); sub.setFillColor(sf::Color::White); sub.setOrigin({sub.getLocalBounds().size.x/2, sub.getLocalBounds().size.y/2}); sub.setPosition({640.f, 450.f}); m_window->draw(sub);
             sf::Text cont(m_font); cont.setString("[PRESSIONE ENTER]"); cont.setCharacterSize(20); cont.setFillColor(sf::Color::Green); cont.setOrigin({cont.getLocalBounds().size.x/2, cont.getLocalBounds().size.y/2}); cont.setPosition({640.f, 550.f}); m_window->draw(cont);
             m_window->display();
             return;
         }
 
-        // [TELA DE CRÉDITOS FINAL]
         if(m_estado == EstadoGame::CREDITOS) {
             m_window->draw(m_modalFundo); 
-            
             sf::Text fim(m_font); fim.setString("MISSAO CUMPRIDA"); fim.setCharacterSize(60); fim.setFillColor(sf::Color::Yellow); fim.setPosition({350.f, 100.f});
             sf::Text sub(m_font); sub.setString("TODOS OS SUJEITOS FORAM CATALOGADOS.\nO BRASIL ESTA SEGURO (POR ENQUANTO)."); sub.setCharacterSize(24); sub.setFillColor(sf::Color::White); sub.setPosition({300.f, 250.f});
-            
-            sf::Text cred(m_font); cred.setString("CREDITOS:\nDesenvolvimento: Lucas Toshio\nEngine: SFML\nInspiracao: Carmen Sandiego (ms-dos)"); cred.setCharacterSize(20); cred.setFillColor(sf::Color::Cyan); cred.setPosition({450.f, 400.f});
-            
+            sf::Text cred(m_font); cred.setString("CREDITOS:\nDesenvolvimento: Voce\nEngine: SFML\nInspiracao: Carmen Sandiego"); cred.setCharacterSize(20); cred.setFillColor(sf::Color::Cyan); cred.setPosition({450.f, 400.f});
             sf::Text res(m_font); res.setString("[PRESSIONE ENTER PARA REINICIAR]"); res.setCharacterSize(20); res.setFillColor(sf::Color::Green); res.setPosition({400.f, 600.f});
-
             m_window->draw(fim); m_window->draw(sub); m_window->draw(cred); m_window->draw(res);
             m_window->display();
             return;

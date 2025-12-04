@@ -7,7 +7,6 @@
 #include "Meme.h"
 #include "SoundManager.h"
 
-// Adicionado estado CREDITOS
 enum class EstadoGame { INVESTIGANDO, VIAJANDO, ABDUZINDO, VITORIA, GAME_OVER, ZEROU, INTRO, PROMOVIDO, CREDITOS };
 
 class Game {
@@ -21,11 +20,14 @@ private:
     void update(); 
     void render();
     
+    // --- LÓGICA UNIFICADA DE INPUT ---
+    void executarAcao(int indiceBotao); // Nova função que aceita Mouse ou Enter
+
     void inicializarPaises();
     void inicializarMemes();
     void iniciarNovaMissao();
     void gerarMissaoLinear(int tamanhoRota);
-    void resetarJogo(); // Nova função para reiniciar tudo
+    void resetarJogo();
     
     std::shared_ptr<Meme> sortearMemeDisponivel(std::string nivel);
     int contarMemesRestantes(std::string nivel);
@@ -52,6 +54,9 @@ private:
     float m_valorPorPista;
     
     std::vector<bool> m_pistasVisitadas; 
+    
+    // Controles de Input
+    sf::Clock m_inputCooldown; // Evita duplo clique acidental
 
     SoundManager m_sound;
     std::vector<sf::Text> m_botoesLocais; 
